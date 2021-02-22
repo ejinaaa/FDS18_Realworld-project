@@ -2,6 +2,7 @@ import axios from 'axios';
 import View from '../utils/View';
 import footer from './footer';
 import header from './header';
+import navigateTo from '../utils/navigateTo';
 
 class Login extends View {
   constructor() {
@@ -62,6 +63,7 @@ class Login extends View {
         const token: string = response.data.user.token;
 
         localStorage.setItem('JWT', token);
+        navigateTo('/');
 
         $errorMessages.innerHTML = '';
         $inputEmail.value = '';
