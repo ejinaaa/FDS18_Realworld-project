@@ -29,7 +29,7 @@ class Login extends View {
             <fieldset class="form-group">
               <input class="form-control form-control-lg login-input-pw" type="password" placeholder="Password">
             </fieldset>
-            <button type="button" class="btn btn-lg btn-primary pull-xs-right login-btn">
+            <button class="btn btn-lg btn-primary pull-xs-right login-btn">
               Sign up
             </button>
           </form>
@@ -50,8 +50,9 @@ class Login extends View {
     $loginContainer.insertBefore($errorMessages, $loginContainer.lastElementChild);
     $errorMessages.classList.add('error-messages');
 
-    $loginBtn.addEventListener('click', async () => {
+    $loginBtn.addEventListener('click', async e => {
       try {
+        e.preventDefault();
         const response = await axios.post('https://conduit.productionready.io/api/users/login', {
           user:{
             email: $inputEmail.value,
