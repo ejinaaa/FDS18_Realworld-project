@@ -1,7 +1,7 @@
 import axios from 'axios';
 import View from '../utils/View';
-import footer from './footer';
-import header from './header';
+import renderFooter from './renderFooter';
+import renderHeader from './renderHeader';
 import fetchTags from './fetchTags';
 import fetchArticles from './fetchArticles';
 
@@ -31,7 +31,7 @@ class Home extends View {
     posts = await fetchArticles();
     tags = await fetchTags();
 
-    return `${header()}<div class="home-page">
+    return `${renderHeader()}<div class="home-page">
     <div class="banner">
       <div class="container">
         <h1 class="logo-font">conduit</h1>
@@ -91,7 +91,7 @@ class Home extends View {
       </div>
     </div>
   
-  </div>${footer()}`;
+  </div>${renderFooter()}`;
   }
 
   eventBinding(): void {

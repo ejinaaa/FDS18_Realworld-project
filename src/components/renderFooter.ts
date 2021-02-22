@@ -1,4 +1,4 @@
-const footer = (): string => `<footer>
+const renderFooter = (): string => `<footer>
   <div class="container">
     <a href="/" class="logo-font">conduit</a>
     <span class="attribution">
@@ -8,4 +8,4 @@ const footer = (): string => `<footer>
 </footer>
 `;
 
-export default footer;
+export default renderFooter;
