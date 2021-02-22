@@ -35,7 +35,7 @@ class Register extends View {
             <fieldset class="form-group">
               <input class="form-control form-control-lg signup-input-pw" type="password" placeholder="Password">
             </fieldset>
-            <button type="button" class="btn btn-lg btn-primary pull-xs-right signup-btn">
+            <button class="btn btn-lg btn-primary pull-xs-right signup-btn">
               Sign up
             </button>
           </form>
@@ -57,8 +57,9 @@ class Register extends View {
     $signupContainer.insertBefore($errorMessages, $signupContainer.lastElementChild);
     $errorMessages.classList.add('error-messages');
     
-    $signupBtn.addEventListener('click', async () => {
+    $signupBtn.addEventListener('click', async e => {
       try {
+        e.preventDefault();
         const response = await axios.post('https://conduit.productionready.io/api/users', {
           user:{
             username: $inputName.value,
