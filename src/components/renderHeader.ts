@@ -6,12 +6,12 @@ const renderHeader = async (): Promise<string> => {
   let userName;
   
   if (userToken) {
-      const response = await axios('https://conduit.productionready.io/api/user', {
+      const userInfoData = await axios('https://conduit.productionready.io/api/user', {
         headers: {
           Authorization: `Token ${userToken}`
         }
       });
-      userName = response.data.user.username;
+      userName = userInfoData.data.user.username;
   }
 
   return `<nav class="navbar navbar-light">
