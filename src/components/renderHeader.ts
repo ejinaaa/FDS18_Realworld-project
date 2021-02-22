@@ -5,7 +5,6 @@ const renderHeader = async (): Promise<string> => {
   const nowPage = window.location.pathname;
   let userName;
   
-  // console.log(userToken)
   if (userToken) {
       const response = await axios('https://conduit.productionready.io/api/user', {
         headers: {
@@ -24,21 +23,21 @@ const renderHeader = async (): Promise<string> => {
         <a class="nav-link ${nowPage === '/' ? 'active' : ''}" href="/">Home</a>
       </li>
       <li class="nav-item">
-      ${userToken ? `<a class="nav-link" href="">
+      ${userToken ? `<a class="nav-link ${nowPage === '/create' ? 'active' : ''}" href="/create">
       <i class="ion-compose"></i>&nbsp;New Post
     </a>` : ''}
       </li>
       <li class="nav-item">
         <a class="nav-link ${
-          nowPage === '/login' ? 'active' : ''
+          nowPage === '/login' ? 'active' : nowPage === '/settings' ? 'active' : ''
         }" href="${userToken ? '/settings' : '/login'}">
           ${userToken ? 'Settings' : 'Sign in'}
         </a>
       </li>
       <li class="nav-item">
         <a class="nav-link ${
-          nowPage === '/register' ? 'active' : ''
-        }" href="${userToken ? '/profile' : '/register'}">${userToken ? 'Profile' : 'Sign up'}</a>
+          nowPage === '/register' ? 'active' : nowPage === '/profile' ? 'active' : ''
+        }" href="${userToken ? '/profile' : '/register'}">${userToken ? userName : 'Sign up'}</a>
       </li>
     </ul>
   </div>

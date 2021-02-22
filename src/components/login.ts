@@ -12,7 +12,9 @@ class Login extends View {
 
   // eslint-disable-next-line class-methods-use-this
   async getHtml(): Promise<string> {
-    return `${renderHeader()}<div class="auth-page">
+    const headerHtml = await renderHeader();
+    
+    return `${headerHtml}<div class="auth-page">
     <div class="container page">
       <div class="row">
   

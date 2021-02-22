@@ -12,7 +12,9 @@ class Settings extends View {
 
   // eslint-disable-next-line class-methods-use-this
   async getHtml(): Promise<string> {
-    return `${renderHeader()}<div class="settings-page">
+    const headerHtml = await renderHeader();
+
+    return `${headerHtml}<div class="settings-page">
     <div class="container page">
       <div class="row">
   

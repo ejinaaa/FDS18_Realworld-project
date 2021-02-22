@@ -28,10 +28,11 @@ class Home extends View {
   }
 
   async getHtml(): Promise<string> {
+    const headerHtml = await renderHeader();
     posts = await fetchArticles();
     tags = await fetchTags();
-
-    return `${renderHeader()}<div class="home-page">
+    
+    return `${headerHtml}<div class="home-page">
     <div class="banner">
       <div class="container">
         <h1 class="logo-font">conduit</h1>
