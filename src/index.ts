@@ -2,6 +2,8 @@ import Home from './components/home';
 import Login from './components/login';
 import Register from './components/register';
 
+const $root = document.getElementById('root') as HTMLDivElement;
+
 const router = async () => {
   const routes = [
     { path: '/', View: Home },
@@ -26,8 +28,8 @@ const router = async () => {
 
   const view = new match.route.View();
 
-  const $root = document.getElementById('root') as HTMLDivElement;
   $root.innerHTML = await view.getHtml();
+  view.eventBinding();
 };
 
 const navigateTo = (url: string) => {
@@ -35,18 +37,17 @@ const navigateTo = (url: string) => {
   router();
 };
 
+// 이벤트 핸들러 등록
+
+document.addEventListener('DOMContentLoaded', router);
+
 window.addEventListener('popstate', router);
 
-document.addEventListener('DOMContentLoaded', () => {
-  const $root = document.getElementById('root') as HTMLDivElement;
-  $root.innerHTML = '<a href="/login">Sign in</a>';
-  $root.addEventListener('click', e => {
-    const target = e.target as HTMLAnchorElement;
+$root.addEventListener('click', e => {
+  const target = e.target as HTMLAnchorElement;
 
-    if (target.matches('[href]')) {
-      e.preventDefault();
-      navigateTo(target.href);
-    }
-  });
-  router();
+  if (target.matches('[href]')) {
+    e.preventDefault();
+    navigateTo(target.href);
+  }
 });

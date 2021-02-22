@@ -1,6 +1,27 @@
+import axios from 'axios';
 import View from '../utils/View';
 import footer from './footer';
 import header from './header';
+
+interface Articles {
+  author: {bio: string | null, following: boolean, };
+  body: string;
+  description: string;
+  favorited: boolean;
+  favoritesCount: boolean;
+  slug: string;
+  tagList: string[];
+  title: string;
+  updateAt: string;
+}
+
+let posts: Articles[];
+
+const fetchArticles = async () => {
+  const res = await axios.get('https://conduit.productionready.io/api/articles?Limit=50');
+  posts = res.data;
+  console.log(posts);
+};
 
 class Home extends View {
   constructor() {
@@ -10,6 +31,8 @@ class Home extends View {
 
   // eslint-disable-next-line class-methods-use-this
   async getHtml(): Promise<string> {
+    await fetchArticles();
+    
     return `${header()}<div class="home-page">
     <div class="banner">
       <div class="container">
@@ -92,6 +115,10 @@ class Home extends View {
     </div>
   
   </div>${footer()}`;
+  }
+
+  eventBinding(): void {
+    
   }
 }
 
