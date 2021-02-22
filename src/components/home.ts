@@ -2,10 +2,13 @@ import axios from 'axios';
 import View from '../utils/View';
 import footer from './footer';
 import header from './header';
+import fetchTags from './fetchTags';
+import fetchArticles from './fetchArticles';
 
 interface Articles {
-  author: {bio: string | null, following: boolean, };
+  author: { bio: string | null, following: boolean, image: string, username: string };
   body: string;
+  createdAt: string;
   description: string;
   favorited: boolean;
   favoritesCount: boolean;
@@ -15,24 +18,19 @@ interface Articles {
   updateAt: string;
 }
 
-let posts: Articles[];
-
-const fetchArticles = async () => {
-  const res = await axios.get('https://conduit.productionready.io/api/articles?Limit=50');
-  posts = res.data;
-  console.log(posts);
-};
+let posts: Articles[] = [];
+let tags: string[] = [];
 
 class Home extends View {
   constructor() {
     super();
-    this.setTitle('home');
+    this.setTitle('Home');
   }
 
-  // eslint-disable-next-line class-methods-use-this
   async getHtml(): Promise<string> {
-    await fetchArticles();
-    
+    posts = await fetchArticles();
+    tags = await fetchTags();
+
     return `${header()}<div class="home-page">
     <div class="banner">
       <div class="container">
@@ -55,43 +53,29 @@ class Home extends View {
               </li>
             </ul>
           </div>
-  
-          <div class="article-preview">
+          ${posts.map(post => {
+            const day = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+            const month = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June', 'July', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'];
+            const createDate = new Date(post.createdAt);
+            const createAt = `${day[createDate.getDay()]} ${month[createDate.getMonth()]} ${createDate.getDate()} ${createDate.getFullYear()}`;
+          return `<div class="article-preview">
             <div class="article-meta">
-              <a href="profile.html"><img src="http://i.imgur.com/Qr71crq.jpg" /></a>
+              <a href="profile.html"><img src="${post.author.image}" /></a>
               <div class="info">
-                <a href="" class="author">Eric Simons</a>
-                <span class="date">January 20th</span>
+                <a href="" class="author">${post.author.username}</a>
+                <span class="date">${createAt}</span>
               </div>
               <button class="btn btn-outline-primary btn-sm pull-xs-right">
-                <i class="ion-heart"></i> 29
+                <i class="ion-heart"></i> ${post.favoritesCount}
               </button>
             </div>
-            <a href="" class="preview-link">
-              <h1>How to build webapps that scale</h1>
-              <p>This is the description for the post.</p>
+            <a id="${post.slug}" href="/article" class="preview-link">
+              <h1>${post.title}</h1>
+              <p>${post.description}</p>
               <span>Read more...</span>
             </a>
-          </div>
-  
-          <div class="article-preview">
-            <div class="article-meta">
-              <a href="profile.html"><img src="http://i.imgur.com/N4VcUeJ.jpg" /></a>
-              <div class="info">
-                <a href="" class="author">Albert Pai</a>
-                <span class="date">January 20th</span>
-              </div>
-              <button class="btn btn-outline-primary btn-sm pull-xs-right">
-                <i class="ion-heart"></i> 32
-              </button>
-            </div>
-            <a href="" class="preview-link">
-              <h1>The song you won't ever stop singing. No matter how hard you try.</h1>
-              <p>This is the description for the post.</p>
-              <span>Read more...</span>
-            </a>
-          </div>
-  
+          </div>`}).join('')}
+          
         </div>
   
         <div class="col-md-3">
@@ -99,14 +83,7 @@ class Home extends View {
             <p>Popular Tags</p>
   
             <div class="tag-list">
-              <a href="" class="tag-pill tag-default">programming</a>
-              <a href="" class="tag-pill tag-default">javascript</a>
-              <a href="" class="tag-pill tag-default">emberjs</a>
-              <a href="" class="tag-pill tag-default">angularjs</a>
-              <a href="" class="tag-pill tag-default">react</a>
-              <a href="" class="tag-pill tag-default">mean</a>
-              <a href="" class="tag-pill tag-default">node</a>
-              <a href="" class="tag-pill tag-default">rails</a>
+              ${tags.map(tag => `<a href="" class="tag-pill tag-default">${tag}</a>`).join('')}
             </div>
           </div>
         </div>
@@ -118,7 +95,7 @@ class Home extends View {
   }
 
   eventBinding(): void {
-    
+
   }
 }
 
