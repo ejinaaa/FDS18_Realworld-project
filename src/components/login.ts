@@ -1,3 +1,4 @@
+import axios from 'axios';
 import View from '../utils/View';
 import footer from './footer';
 import header from './header';
@@ -14,7 +15,7 @@ class Login extends View {
     <div class="container page">
       <div class="row">
   
-        <div class="col-md-6 offset-md-3 col-xs-12">
+        <div class="col-md-6 offset-md-3 col-xs-12 login-container">
           <h1 class="text-xs-center">Sign in</h1>
 
           <p class="text-xs-center">
@@ -23,12 +24,12 @@ class Login extends View {
   
           <form>
             <fieldset class="form-group">
-              <input class="form-control form-control-lg" type="text" placeholder="Email">
+              <input class="form-control form-control-lg login-input-email" type="text" placeholder="Email">
             </fieldset>
             <fieldset class="form-group">
-              <input class="form-control form-control-lg" type="password" placeholder="Password">
+              <input class="form-control form-control-lg login-input-pw" type="password" placeholder="Password">
             </fieldset>
-            <button class="btn btn-lg btn-primary pull-xs-right">
+            <button class="btn btn-lg btn-primary pull-xs-right login-btn">
               Sign up
             </button>
           </form>
@@ -40,7 +41,39 @@ class Login extends View {
   }
 
   eventBinding(): void {
-    const logBtn =  document.querySelector('.btn-lg') as HTMLInputElement;
+    const $inputEmail = document.querySelector('.login-input-email') as HTMLInputElement;
+    const $inputPassword = document.querySelector('.login-input-pw') as HTMLInputElement;
+    const $loginBtn = document.querySelector('.login-btn') as HTMLButtonElement;
+    const $loginContainer = document.querySelector('.login-container') as HTMLDivElement;
+    const $errorMessages = document.createElement('ul') as HTMLUListElement;
+
+    $loginContainer.insertBefore($errorMessages, $loginContainer.lastElementChild);
+    $errorMessages.classList.add('error-messages');
+
+    $loginBtn.addEventListener('click', async e => {
+      try {
+        e.preventDefault();
+        const response = await axios.post('https://conduit.productionready.io/api/users/login', {
+          user:{
+            email: $inputEmail.value,
+            password: $inputPassword.value
+          }
+        });
+        const token: string = response.data.user.token;
+
+        localStorage.setItem('JWT', token);
+
+        $errorMessages.innerHTML = '';
+        $inputEmail.value = '';
+        $inputPassword.value = '';
+      } catch (err) {
+        const errorObj = err.response.data.errors;
+        const errorName = Object.keys(errorObj).join('');
+        const errorMessage = Object.values(errorObj).join('');
+        
+        $errorMessages.innerHTML = `<li>${errorName} ${errorMessage}</li>`;
+      }
+    });
   }
 }
 
