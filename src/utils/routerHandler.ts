@@ -3,6 +3,7 @@ import Login from '../components/login';
 import Register from '../components/register';
 import Article from '../components/articlePreview';
 import Edit from '../components/edit';
+import Settings from '../components/settings';
 
 const $root = document.getElementById('root') as HTMLDivElement;
 
@@ -12,7 +13,8 @@ const routerHandler = async () => {
     { path: '/login', View: Login },
     { path: '/register', View: Register },
     { path: '/article', View: Article },
-    { path: '/edit', View: Edit }
+    { path: '/edit', View: Edit },
+    { path: '/settings', View: Settings }
   ];
 
   const potentialmatches = routes.map(route => ({
