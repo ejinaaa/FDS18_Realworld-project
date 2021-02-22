@@ -5,6 +5,8 @@ abstract class View {
   }
 
   abstract getHtml(): Promise<string>;
+
+  abstract eventBinding(): void
 }
 
 export default View;

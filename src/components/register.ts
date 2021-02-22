@@ -44,6 +44,10 @@ class Register extends View {
     </div>
   </div>${footer()}`;
   }
+
+  eventBinding(): void {
+    
+  }
 }
 
 export default Register;

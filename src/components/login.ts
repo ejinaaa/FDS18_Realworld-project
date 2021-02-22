@@ -38,6 +38,10 @@ class Login extends View {
     </div>
   </div>${footer()}`;
   }
+
+  eventBinding(): void {
+    const logBtn =  document.querySelector('.btn-lg') as HTMLInputElement;
+  }
 }
 
 export default Login;
