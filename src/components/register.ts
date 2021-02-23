@@ -12,7 +12,9 @@ class Register extends View {
 
   // eslint-disable-next-line class-methods-use-this
   async getHtml(): Promise<string> {
-    return `${renderHeader()}<div class="auth-page">
+    const headerHtml = await renderHeader();
+
+    return `${headerHtml}<div class="auth-page">
     <div class="container page">
       <div class="row">
   
@@ -61,14 +63,14 @@ class Register extends View {
     $signupBtn.addEventListener('click', async e => {
       try {
         e.preventDefault();
-        const response = await axios.post('https://conduit.productionready.io/api/users', {
+        const userInfoData = await axios.post('https://conduit.productionready.io/api/users', {
           user:{
             username: $inputName.value,
             email: $inputEmail.value,
             password: $inputPassword.value
           }
         });
-        const token: string = response.data.user.token;
+        const token: string = userInfoData.data.user.token;
 
         localStorage.setItem('JWT', token);
         
