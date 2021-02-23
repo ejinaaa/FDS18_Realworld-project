@@ -4,6 +4,8 @@ import renderFooter from './renderFooter';
 import renderHeader from './renderHeader';
 import fetchTags from './fetchTags';
 import fetchArticles from './fetchArticles';
+import navigateTo from '../utils/navigateTo';
+import dateConverter from '../utils/dateConverter';
 
 interface Articles {
   author: { bio: string | null, following: boolean, image: string, username: string };
@@ -55,27 +57,24 @@ class Home extends View {
             </ul>
           </div>
           ${posts.map(post => {
-            const day = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-            const month = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June', 'July', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'];
-            const createDate = new Date(post.createdAt);
-            const createAt = `${day[createDate.getDay()]} ${month[createDate.getMonth()]} ${createDate.getDate()} ${createDate.getFullYear()}`;
-          return `<div class="article-preview">
-            <div class="article-meta">
-              <a href="profile.html"><img src="${post.author.image}" /></a>
-              <div class="info">
-                <a href="" class="author">${post.author.username}</a>
-                <span class="date">${createAt}</span>
+            const createAt = dateConverter(post.createdAt);
+            return `<div class="article-preview">
+              <div class="article-meta">
+                <a href="/profile"><img src="${post.author.image}"/></a>
+                <div class="info">
+                  <a href="/profile" class="author">${post.author.username}</a>
+                  <span class="date">${createAt}</span>
+                </div>
+                <button class="btn btn-outline-primary btn-sm pull-xs-right">
+                  <i class="ion-heart"></i> ${post.favoritesCount}
+                </button>
               </div>
-              <button class="btn btn-outline-primary btn-sm pull-xs-right">
-                <i class="ion-heart"></i> ${post.favoritesCount}
-              </button>
-            </div>
-            <a id="${post.slug}" href="/article" class="preview-link">
-              <h1>${post.title}</h1>
-              <p>${post.description}</p>
-              <span>Read more...</span>
-            </a>
-          </div>`}).join('')}
+              <a id="${post.slug}" href="/article" class="preview-link">
+                <h1>${post.title}</h1>
+                <p>${post.description}</p>
+                <span>Read more...</span>
+              </a>
+            </div>`}).join('')}
           
         </div>
   
@@ -96,7 +95,15 @@ class Home extends View {
   }
 
   eventBinding(): void {
+    const $colMd9 = document.querySelector('.col-md-9') as HTMLDivElement;
 
+    $colMd9.addEventListener('click', e => {
+      const target = e.target as HTMLElement;
+      if (target.matches('[href] > *')) {
+        e.preventDefault();
+        navigateTo('/article');
+      }
+    });
   }
 }
 
