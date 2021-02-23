@@ -1,7 +1,7 @@
 import axios from 'axios';
 import View from '../utils/View';
-import footer from './renderFooter';
-import header from './renderHeader';
+import renderFooter from './renderFooter';
+import renderHeader from './renderHeader';
 import navigateTo from '../utils/navigateTo';
 
 class Edit extends View {
@@ -11,7 +11,8 @@ class Edit extends View {
   }
 
   async getHtml(): Promise<string> {
-    return `${header()}<div class="editor-page">
+    const headerHtml = await renderHeader();
+    return `${headerHtml}<div class="editor-page">
     <div class="container page">
       <div class="row">
   
@@ -39,7 +40,7 @@ class Edit extends View {
   
       </div>
     </div>
-  </div>${footer()}`;
+  </div>${renderFooter()}`;
   }
 
   eventBinding(): void {

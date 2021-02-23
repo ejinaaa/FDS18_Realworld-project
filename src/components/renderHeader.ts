@@ -1,9 +1,9 @@
 import axios from "axios";
 
-const renderHeader = async (): Promise<string> => {
+const renderHeader = async () => {
   const userToken = window.localStorage.getItem('JWT');
   const nowPage = window.location.pathname;
-  let userName;
+  let userName = '';
   
   if (userToken) {
       const userInfoData = await axios('https://conduit.productionready.io/api/user', {
@@ -23,7 +23,7 @@ const renderHeader = async (): Promise<string> => {
         <a class="nav-link ${nowPage === '/' ? 'active' : ''}" href="/">Home</a>
       </li>
       <li class="nav-item">
-      ${userToken ? `<a class="nav-link ${nowPage === '/create' ? 'active' : ''}" href="/create">
+      ${userToken ? `<a class="nav-link ${nowPage === '/editor' ? 'active' : ''}" href="/editor">
       <i class="ion-compose"></i>&nbsp;New Post
     </a>` : ''}
       </li>

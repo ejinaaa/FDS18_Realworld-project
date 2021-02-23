@@ -13,7 +13,7 @@ const routerHandler = async () => {
     { path: '/login', View: Login },
     { path: '/register', View: Register },
     { path: '/article', View: Article },
-    { path: '/edit', View: Edit },
+    { path: '/editor', View: Edit },
     { path: '/settings', View: Settings }
   ];
 
