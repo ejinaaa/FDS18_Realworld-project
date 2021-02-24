@@ -64,16 +64,15 @@ class Register extends View {
       try {
         e.preventDefault();
         
-        const userInfo = await axios.post('https://conduit.productionready.io/api/users', {
+        const userToken = await (await axios.post('https://conduit.productionready.io/api/users', {
           user:{
             username: $inputName.value,
             email: $inputEmail.value,
             password: $inputPassword.value
           }
-        });
-        const token: string = userInfo.data.user.token;
+        })).data.user.token;
 
-        localStorage.setItem('JWT', token);
+        localStorage.setItem('JWT', userToken);
         
         navigateTo('/');
 
@@ -83,8 +82,9 @@ class Register extends View {
         $inputPassword.value = '';
       } catch (err) {
         const errorObj = err.response.data.errors;
-        const errorNames = Object.keys(errorObj);
-        const errorMessages = Object.values(errorObj);
+        const [ errorNames, errorMessages ] = [ Object.keys(errorObj), Object.values(errorObj) ];
+        // const errorNames = Object.keys(errorObj);
+        // const errorMessages = Object.values(errorObj);
         
         $errorMessages.innerHTML = errorMessages.map((message: any, index) => {
           return `<li>${errorNames[index]} ${message.join(', ')}</li>`
