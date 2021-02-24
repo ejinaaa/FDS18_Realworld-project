@@ -56,13 +56,14 @@ class Login extends View {
     $loginBtn.addEventListener('click', async e => {
       try {
         e.preventDefault();
-        const userInfoData = await axios.post('https://conduit.productionready.io/api/users/login', {
+        
+        const userInfo = await axios.post('https://conduit.productionready.io/api/users/login', {
           user:{
             email: $inputEmail.value,
             password: $inputPassword.value
           }
         });
-        const token: string = userInfoData.data.user.token;
+        const token: string = userInfo.data.user.token;
 
         localStorage.setItem('JWT', token);
         
