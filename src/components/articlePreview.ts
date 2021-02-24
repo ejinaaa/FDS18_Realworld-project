@@ -22,7 +22,83 @@ class Article extends View {
   }
 
   skeleton(): string {
-    return '';
+    return `
+    <div class="article-page">
+
+      <div class="banner">
+        <div class="container">
+    
+          <h1 class="article-heading-skeleton heading-skeleton"></h1>
+    
+          <div class="article-meta skeleton-article-meta">
+            <a><span class="author-img-skeleton heading-skeleton"></span></a>
+            <div class="info">
+              <a class="author author-name-skeleton heading-skeleton"></a>
+              <span class="date create-at-skeleton heading-skeleton"></span>
+            </div>
+          </div>
+    
+        </div>
+      </div>
+    
+      <div class="container page">
+    
+        <div class="row article-content">
+          <div class="col-md-12">
+            <p style="min-height: 250px">
+              <span class="article-body-skeleton1 skeleton"></span>
+              <span class="article-body-skeleton2 skeleton"></span>
+              <span class="article-body-skeleton3 skeleton"></span>
+              <span class="article-body-skeleton4 skeleton"></span>
+              <span class="article-body-skeleton5 skeleton"></span>
+              <span class="article-body-skeleton6 skeleton"></span>
+              <span class="article-body-skeleton7 skeleton"></span>
+              <span class="article-body-skeleton8 skeleton"></span>
+              <span class="article-body-skeleton9 skeleton"></span>
+              <span class="article-body-skeleton10 skeleton"></span>
+            </p>
+          </div>
+        </div>
+    
+        <hr/>
+    
+        <div class="article-actions">
+          <div class="article-meta skeleton-comment-meta">
+            <a><span class="comment-author-img-skeleton skeleton"></span></a>
+            <div class="info">
+              <a class="author comment-author-name-skeleton skeleton"></a>
+              <span class="date comment-create-at-skeleton skeleton"></span>
+            </div>
+    
+            <button class="btn btn-sm btn-outline-secondary">
+              ${isCurrentUserArticle ? `<i class="ion-edit"></i> Edit Article` : `<i class="ion-plus-round"></i> Follow`}
+            </button>
+            &nbsp;
+            <button class="btn btn-sm ${isCurrentUserArticle ? 'btn-outline-danger' : 'btn-outline-primary'}">
+              ${isCurrentUserArticle ? `<i class="ion-trash-a"></i> Delete Article` :  `<i class="ion-heart"></i> Favorite Post <span class="counter">()</span>`}
+            </button>
+          </div>
+        </div>
+    
+        <div class="row">
+    
+          <div class="col-xs-12 col-md-8 offset-md-2">
+    
+            <form class="card comment-form">
+              <div class="card-block">
+                <textarea class="form-control comment-body" placeholder="Write a comment..." rows="3"></textarea>
+              </div>
+              <div class="card-footer">
+                <span class="comment-author-img-skeleton skeleton"></span>
+                <button class="btn btn-sm btn-primary">
+                  Post Comment
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>`;
   }
 
   async getHtml(): Promise<string> {
