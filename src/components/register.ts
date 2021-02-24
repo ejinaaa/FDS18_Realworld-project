@@ -71,7 +71,6 @@ class Register extends View {
             password: $inputPassword.value
           }
         })).data.user.token;
-        // const token: string = userInfo.data.user.token;
 
         localStorage.setItem('JWT', userToken);
         

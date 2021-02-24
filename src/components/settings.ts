@@ -15,12 +15,8 @@ class Settings extends View {
 
   // eslint-disable-next-line class-methods-use-this
   async getHtml(): Promise<string> {
-    const userInfo = await (await getData('user')).data.user;
+    const userInfo = await (await getData('user')).user;
     const [ userImgUrl, userName, userBio, userEmail ] = [ userInfo.image, userInfo.username, userInfo.bio, userInfo.email ];
-    // const userImgUrl = userInfo.data.user.image;
-    // const userName = userInfo.data.user.username;
-    // const userBio = userInfo.data.user.bio;
-    // const userEmail = userInfo.data.user.email;
     
     return `<div class="settings-page">
     <div class="container page">
