@@ -1,7 +1,5 @@
 import axios from 'axios';
 import View from '../utils/View';
-import renderFooter from './renderFooter';
-import renderHeader from './renderHeader';
 import fetchTags from './fetchTags';
 import fetchArticles from './fetchArticles';
 import navigateTo from '../utils/navigateTo';
@@ -20,6 +18,7 @@ interface Articles {
   updateAt: string;
 }
 
+const ONE_PAGE_ARTICLE_CNT = 10;
 let posts: Articles[] = [];
 let tags: string[] = [];
 
@@ -29,12 +28,71 @@ class Home extends View {
     this.setTitle('Home');
   }
 
+  skeleton(): string {
+    return `<div class="home-page">
+      <div class="banner">
+        <div class="container">
+          <h1 class="logo-font">conduit</h1>
+          <p>A place to share your knowledge.</p>
+        </div>
+      </div>
+    
+      <div class="container page">
+        <div class="row">
+    
+          <div class="col-md-9">
+            <div class="feed-toggle">
+              <ul class="nav nav-pills outline-active">
+                <li class="nav-item">
+                  <a class="nav-link disabled" href="">Your Feed</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link active" href="">Global Feed</a>
+                </li>
+              </ul>
+            </div>
+            ${Array.from({ length: ONE_PAGE_ARTICLE_CNT }).map(post => {
+              return `<div class="article-preview">
+                <div class="article-meta">
+                  <a href=""></a>
+                  <div class="info">
+                    <a href="" class="author"></a>
+                    <span class="date"></span>
+                  </div>
+                  <button class="btn btn-outline-primary btn-sm pull-xs-right">
+                    <i class="ion-heart"></i>
+                  </button>
+                </div>
+                <a href="" class="preview-link">
+                  <h1></h1>
+                  <p></p>
+                  <span>Loading...</span>
+                </a>
+              </div>`}).join('')}
+            
+          </div>
+    
+          <div class="col-md-3">
+            <div class="sidebar">
+            <p>Popular Tags</p>
+            
+            <div class="tag-list">
+              Loading...
+            </div>
+          </div>
+        </div>
+  
+      </div>
+    </div>
+  
+  </div>`;
+  }
+
   async getHtml(): Promise<string> {
-    const headerHtml = await renderHeader();
     posts = await fetchArticles();
     tags = await fetchTags();
     
-    return `${headerHtml}<div class="home-page">
+    return `<div class="home-page">
     <div class="banner">
       <div class="container">
         <h1 class="logo-font">conduit</h1>
@@ -57,19 +115,18 @@ class Home extends View {
             </ul>
           </div>
           ${posts.map(post => {
-            const createAt = dateConverter(post.createdAt);
             return `<div class="article-preview">
               <div class="article-meta">
                 <a href="/profile"><img src="${post.author.image}"/></a>
                 <div class="info">
                   <a href="/profile" class="author">${post.author.username}</a>
-                  <span class="date">${createAt}</span>
+                  <span class="date">${dateConverter(post.createdAt)}</span>
                 </div>
                 <button class="btn btn-outline-primary btn-sm pull-xs-right">
                   <i class="ion-heart"></i> ${post.favoritesCount}
                 </button>
               </div>
-              <a id="${post.slug}" href="/article" class="preview-link">
+              <a id="${post.slug}" href="/article/${post.slug}" class="preview-link">
                 <h1>${post.title}</h1>
                 <p>${post.description}</p>
                 <span>Read more...</span>
@@ -91,7 +148,7 @@ class Home extends View {
       </div>
     </div>
   
-  </div>${renderFooter()}`;
+  </div>`;
   }
 
   eventBinding(): void {
@@ -99,9 +156,10 @@ class Home extends View {
 
     $colMd9.addEventListener('click', e => {
       const target = e.target as HTMLElement;
+      const parentNode = target.parentNode as HTMLAnchorElement;
       if (target.matches('[href] > *')) {
         e.preventDefault();
-        navigateTo('/article');
+        navigateTo(parentNode.href);
       }
     });
   }

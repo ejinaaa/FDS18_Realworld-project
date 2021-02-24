@@ -4,6 +4,8 @@ import Register from '../components/register';
 import Article from '../components/articlePreview';
 import Edit from '../components/edit';
 import Settings from '../components/settings';
+import renderHeader from '../components/renderHeader';
+import renderFooter from '../components/renderFooter';
 
 const $root = document.getElementById('root') as HTMLDivElement;
 
@@ -34,7 +36,11 @@ const routerHandler = async () => {
 
   const view = new match.route.View();
 
-  $root.innerHTML = await view.getHtml();
+  const $main = document.querySelector('main') as HTMLElement;
+
+  $main.innerHTML = view.skeleton();
+  $main.innerHTML = await view.getHtml();
+  
   view.eventBinding();
 };
 

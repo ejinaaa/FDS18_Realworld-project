@@ -3,7 +3,7 @@ import axios from "axios";
 const renderHeader = async () => {
   const userToken = window.localStorage.getItem('JWT');
   const nowPage = window.location.pathname;
-  let userName = '';
+  let userName = ''; 
   
   if (userToken) {
       const userInfoData = await axios('https://conduit.productionready.io/api/user', {

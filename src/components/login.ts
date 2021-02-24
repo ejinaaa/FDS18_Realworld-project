@@ -1,8 +1,7 @@
 import axios from 'axios';
 import View from '../utils/View';
-import renderFooter from './renderFooter';
-import renderHeader from './renderHeader';
 import navigateTo from '../utils/navigateTo';
+import renderHeader from '../components/renderHeader';
 
 class Login extends View {
   constructor() {
@@ -10,11 +9,13 @@ class Login extends View {
     this.setTitle('login');
   }
 
+  skeleton(): string {
+    return '';
+  }
+
   // eslint-disable-next-line class-methods-use-this
   async getHtml(): Promise<string> {
-    const headerHtml = await renderHeader();
-    
-    return `${headerHtml}<div class="auth-page">
+    return `<div class="auth-page">
     <div class="container page">
       <div class="row">
   
@@ -40,7 +41,7 @@ class Login extends View {
   
       </div>
     </div>
-  </div>${renderFooter()}`;
+  </div>`;
   }
 
   eventBinding(): void {
@@ -65,6 +66,9 @@ class Login extends View {
         const token: string = userInfoData.data.user.token;
 
         localStorage.setItem('JWT', token);
+        const $header = document.querySelector('header') as HTMLHeadingElement;
+
+        $header.innerHTML = await renderHeader();
         
         navigateTo('/');
 

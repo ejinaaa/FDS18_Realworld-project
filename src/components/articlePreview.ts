@@ -1,7 +1,5 @@
 import axios from 'axios';
 import View from '../utils/View';
-import renderFooter from './renderFooter';
-import renderHeader from './renderHeader';
 import fetchTags from './fetchTags';
 import fetchArticles from './fetchArticles';
 
@@ -13,11 +11,12 @@ class Article extends View {
     this.setTitle('Article');
   }
 
-  async getHtml(): Promise<string> {
-    const headerHtml = await renderHeader();
+  skeleton(): string {
+    return '';
+  }
 
-    return `${headerHtml}
-    <div class="article-page">
+  async getHtml(): Promise<string> {
+    return `<div class="article-page">
 
       <div class="banner">
         <div class="container">
@@ -136,8 +135,7 @@ class Article extends View {
     
       </div>
     
-    </div>
-  ${renderFooter()}`;
+    </div>`;
   }
 
   eventBinding(): void {

@@ -1,7 +1,5 @@
 import axios, { AxiosResponse } from 'axios';
 import View from '../utils/View';
-import renderFooter from './renderFooter';
-import renderHeader from './renderHeader';
 import navigateTo from '../utils/navigateTo';
 
 class Register extends View {
@@ -10,11 +8,13 @@ class Register extends View {
     this.setTitle('register');
   }
 
+  skeleton(): string {
+    return '';
+  }
+
   // eslint-disable-next-line class-methods-use-this
   async getHtml(): Promise<string> {
-    const headerHtml = await renderHeader();
-
-    return `${headerHtml}<div class="auth-page">
+    return `<div class="auth-page">
     <div class="container page">
       <div class="row">
   
@@ -46,7 +46,7 @@ class Register extends View {
   
       </div>
     </div>
-  </div>${renderFooter()}`;
+  </div>`;
   }
 
   eventBinding(): void {

@@ -1,7 +1,5 @@
 import axios from 'axios';
 import View from '../utils/View';
-import renderFooter from './renderFooter';
-import renderHeader from './renderHeader';
 import navigateTo from '../utils/navigateTo';
 
 class Edit extends View {
@@ -10,9 +8,12 @@ class Edit extends View {
     this.setTitle('Create Article');
   }
 
+  skeleton(): string {
+    return '';
+  }
+
   async getHtml(): Promise<string> {
-    const headerHtml = await renderHeader();
-    return `${headerHtml}<div class="editor-page">
+    return `<div class="editor-page">
     <div class="container page">
       <div class="row">
   
@@ -40,7 +41,7 @@ class Edit extends View {
   
       </div>
     </div>
-  </div>${renderFooter()}`;
+  </div>`;
   }
 
   eventBinding(): void {

@@ -4,6 +4,8 @@ abstract class View {
   setTitle(title: string): void {
     document.title = `Conduit-${title}`;
   }
+  
+  abstract skeleton(): string
 
   abstract getHtml(): Promise<string>
 
