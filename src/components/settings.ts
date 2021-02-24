@@ -15,11 +15,12 @@ class Settings extends View {
 
   // eslint-disable-next-line class-methods-use-this
   async getHtml(): Promise<string> {
-    const userInfoData = await getData('user');
-    const userImgUrl = userInfoData.data.user.image;
-    const userName = userInfoData.data.user.username;
-    const userBio = userInfoData.data.user.bio;
-    const userEmail = userInfoData.data.user.email;
+    const userInfo = await (await getData('user')).data.user;
+    const [ userImgUrl, userName, userBio, userEmail ] = [ userInfo.image, userInfo.username, userInfo.bio, userInfo.email ];
+    // const userImgUrl = userInfo.data.user.image;
+    // const userName = userInfo.data.user.username;
+    // const userBio = userInfo.data.user.bio;
+    // const userEmail = userInfo.data.user.email;
     
     return `<div class="settings-page">
     <div class="container page">
@@ -81,10 +82,10 @@ class Settings extends View {
           }
         });
 
-        $inputPassword.value = '';
+        navigateTo('/profile');
       } catch(err) {
         const errorObj = err.response.data;
-        console.log(errorObj.errors)
+        console.log(errorObj.errors);
       }
     });
   }

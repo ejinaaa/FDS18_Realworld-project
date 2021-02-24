@@ -58,15 +58,15 @@ class Login extends View {
       try {
         e.preventDefault();
         
-        const userInfo = await axios.post('https://conduit.productionready.io/api/users/login', {
+        const userToken = await (await axios.post('https://conduit.productionready.io/api/users/login', {
           user: {
             email: $inputEmail.value,
             password: $inputPassword.value
           }
-        });
-        const token: string = await userInfo.data.user.token;
+        })).data.user.token;
 
-        localStorage.setItem('JWT', token);
+        localStorage.setItem('JWT', userToken);
+        
         const $header = document.querySelector('header') as HTMLElement;
 
         $header.innerHTML = await renderHeader();
@@ -78,8 +78,7 @@ class Login extends View {
         $inputPassword.value = '';
       } catch (err) {
         const errorObj = err.response.data.errors;
-        const errorName = Object.keys(errorObj).join('');
-        const errorMessage = Object.values(errorObj).join('');
+        const [ errorName, errorMessage ] = [ Object.keys(errorObj).join(''), Object.values(errorObj).join('') ];
         
         $errorMessages.innerHTML = `<li>${errorName} ${errorMessage}</li>`;
       }
