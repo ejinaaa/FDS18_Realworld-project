@@ -3,6 +3,7 @@ import fetchTags from './fetchTags';
 import fetchArticles from './fetchArticles';
 import navigateTo from '../utils/navigateTo';
 import dateConverter from '../utils/dateConverter';
+import articlesSkeleton from './articlesSkeleton';
 
 interface Articles {
   author: { bio: string | null, following: boolean, image: string, username: string };
@@ -17,7 +18,6 @@ interface Articles {
   updateAt: string;
 }
 
-const ONE_PAGE_ARTICLE_CNT = 10;
 let posts: Articles[] = [];
 let tags: string[] = [];
 
@@ -50,25 +50,7 @@ class Home extends View {
                 </li>
               </ul>
             </div>
-            ${Array.from({ length: ONE_PAGE_ARTICLE_CNT }).map(post => {
-              return `<div class="article-preview">
-                <div class="article-meta">
-                  <a href=""></a>
-                  <div class="info">
-                    <a href="" class="author"></a>
-                    <span class="date"></span>
-                  </div>
-                  <button class="btn btn-outline-primary btn-sm pull-xs-right">
-                    <i class="ion-heart"></i>
-                  </button>
-                </div>
-                <a href="" class="preview-link">
-                  <h1></h1>
-                  <p></p>
-                  <span>Loading...</span>
-                </a>
-              </div>`}).join('')}
-            
+            ${articlesSkeleton()}            
           </div>
     
           <div class="col-md-3">

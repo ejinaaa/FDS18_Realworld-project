@@ -2,6 +2,7 @@ import routerHandler from './utils/routerHandler';
 import navigateTo from './utils/navigateTo';
 import renderHeader from './components/renderHeader';
 import renderFooter from './components/renderFooter';
+import './scss/style.scss';
 
 const $root = document.getElementById('root') as HTMLDivElement;
 
