@@ -1,6 +1,7 @@
 import axios, { AxiosResponse } from 'axios';
 import View from '../utils/View';
 import navigateTo from '../utils/navigateTo';
+import getData from './getData';
 
 class Settings extends View {
   constructor() {
@@ -14,6 +15,12 @@ class Settings extends View {
 
   // eslint-disable-next-line class-methods-use-this
   async getHtml(): Promise<string> {
+    const userInfoData = await getData('user');
+    const userImgUrl = userInfoData.data.user.image;
+    const userName = userInfoData.data.user.username;
+    const userBio = userInfoData.data.user.bio;
+    const userEmail = userInfoData.data.user.email;
+    
     return `<div class="settings-page">
     <div class="container page">
       <div class="row">
@@ -24,16 +31,16 @@ class Settings extends View {
           <form>
             <fieldset>
                 <fieldset class="form-group">
-                  <input class="form-control setting-input-img-url" type="text" placeholder="URL of profile picture">
+                  <input class="form-control setting-input-img-url" type="text" placeholder="URL of profile picture" value="${userImgUrl ? userImgUrl : ''}">
                 </fieldset>
                 <fieldset class="form-group">
-                  <input class="form-control form-control-lg setting-input-name" type="text" placeholder="Your Name">
+                  <input class="form-control form-control-lg setting-input-name" type="text" placeholder="Your Name" value="${userName ? userName : ''}">
                 </fieldset>
                 <fieldset class="form-group">
-                  <textarea class="form-control form-control-lg setting-input-bio" rows="8" placeholder="Short bio about you"></textarea>
+                  <textarea class="form-control form-control-lg setting-input-bio" rows="8" placeholder="Short bio about you">${userBio ? userBio : ''}</textarea>
                 </fieldset>
                 <fieldset class="form-group">
-                  <input class="form-control form-control-lg setting-input-email" type="text" placeholder="Email">
+                  <input class="form-control form-control-lg setting-input-email" type="text" placeholder="Email" value="${userEmail ? userEmail : ''}">
                 </fieldset>
                 <fieldset class="form-group">
                   <input class="form-control form-control-lg setting-input-pw" type="password" placeholder="Password">
@@ -52,28 +59,10 @@ class Settings extends View {
 
   async eventBinding(): Promise<void> {
     const $inputImgUrl = document.querySelector('.setting-input-img-url') as HTMLInputElement;
-    const $inputName = document.querySelector('.setting-input-name') as HTMLInputElement;
     const $inputBio = document.querySelector('.setting-input-bio') as HTMLInputElement;
     const $inputEmail = document.querySelector('.setting-input-email') as HTMLInputElement;
     const $inputPassword = document.querySelector('.setting-input-pw') as HTMLInputElement;
     const $settingBtn = document.querySelector('.setting-btn') as HTMLButtonElement;
-    const userToken = window.localStorage.getItem('JWT');
-    const userInfoData = await axios('https://conduit.productionready.io/api/user', {
-      headers: {
-        Authorization: `Token ${userToken}`
-      }
-    });
-    const userImgUrl = userInfoData.data.user.image;
-    const userName = userInfoData.data.user.username;
-    const userBio = userInfoData.data.user.bio;
-    const userEmail = userInfoData.data.user.email;
-
-    $inputImgUrl.value = userImgUrl ? userImgUrl : '';
-    $inputName.value = userName ? userName : '';
-    $inputBio.value = userBio ? userBio : '';
-    $inputEmail.value = userEmail ? userEmail : '';
-
-    console.log(userInfoData.data.user)
 
     $settingBtn.addEventListener('click', async e => {
       try {
@@ -88,7 +77,7 @@ class Settings extends View {
           }
         }, {
           headers: {
-            Authorization: `Token ${userToken}`
+            Authorization: `Token ${this.USER_TOKEN}`
           }
         });
 
@@ -97,7 +86,7 @@ class Settings extends View {
         const errorObj = err.response.data;
         console.log(errorObj.errors)
       }
-    })
+    });
   }
 }
 

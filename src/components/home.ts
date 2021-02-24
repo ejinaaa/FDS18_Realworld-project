@@ -1,4 +1,3 @@
-import axios from 'axios';
 import View from '../utils/View';
 import fetchTags from './fetchTags';
 import fetchArticles from './fetchArticles';
