@@ -5,6 +5,7 @@ import Article from '../components/articlePreview';
 import Edit from '../components/edit';
 import Settings from '../components/settings';
 import Profile from '../components/profile';
+import renderHeader from '../components/renderHeader';
 
 const $root = document.getElementById('root') as HTMLDivElement;
 
@@ -41,7 +42,9 @@ const routerHandler = async () => {
   const view = new match.route.View();
 
   const $main = document.querySelector('main') as HTMLElement;
+  const $header = document.querySelector('header') as HTMLElement;
 
+  $header.innerHTML = await renderHeader();
   $main.innerHTML = view.skeleton();
   $main.innerHTML = await view.getHtml();
   
