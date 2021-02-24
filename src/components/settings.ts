@@ -1,4 +1,4 @@
-import axios, { AxiosResponse } from 'axios';
+import axios from 'axios';
 import View from '../utils/View';
 import navigateTo from '../utils/navigateTo';
 import getData from './getData';
@@ -61,11 +61,11 @@ class Settings extends View {
     const $inputPassword = document.querySelector('.setting-input-pw') as HTMLInputElement;
     const $settingBtn = document.querySelector('.setting-btn') as HTMLButtonElement;
 
-    $settingBtn.addEventListener('click', async e => {
+    const updateSettings = async (e: MouseEvent) => {
       try {
         e.preventDefault();
 
-        await axios.put('https://conduit.productionready.io/api/user', {
+        const userName = await (await axios.put('https://conduit.productionready.io/api/user', {
           user:{
             image: $inputImgUrl.value ? $inputImgUrl.value : '',
             bio: $inputBio.value ? $inputBio.value : '',
@@ -76,14 +76,18 @@ class Settings extends View {
           headers: {
             Authorization: `Token ${this.USER_TOKEN}`
           }
-        });
+        })).data.user.username;
 
-        navigateTo('/profile');
+        navigateTo(`/profile@${userName}`);
       } catch(err) {
-        const errorObj = err.response.data;
-        console.log(errorObj.errors);
+        const errorObj = err.response.data.errors;
+        const [ errorName, errorMessage ] = [ Object.keys(errorObj).join(''), Object.values(errorObj).join('') ];
+        
+        console.log(`${errorName} ${errorMessage}`);
       }
-    });
+    };
+
+    $settingBtn.addEventListener('click', updateSettings);
   }
 }
 

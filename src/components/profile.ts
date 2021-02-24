@@ -7,6 +7,7 @@ import followUser from './followUser';
 import unfollowUser from './unfollowUser';
 import showArticle from './showArticle';
 import switchArticleSection from './switchArticleSection';
+import selectFavoriteArticle from './selectFavoriteArticle';
 
 class Profile extends View {
   constructor() {
@@ -100,6 +101,7 @@ class Profile extends View {
     const $signoutFollowBtn = document.querySelector('.profile-page .btn') as HTMLButtonElement;
     const $articleTab = document.querySelector('.nav-pills') as HTMLUListElement;
     const $articleContainer = document.querySelector('.articles-container') as HTMLDivElement;
+    // const $articlePreview = document.querySelector('.articles-container') as HTMLDivElement;
 
     const signout = () => {
       localStorage.removeItem('JWT');
@@ -114,7 +116,10 @@ class Profile extends View {
       if (target.textContent === 'Unfollow') unfollowUser(target);
     });
     $articleTab.addEventListener('click', switchArticleSection);
-    $articleContainer.addEventListener('click', showArticle);
+    $articleContainer.addEventListener('click', (e: MouseEvent) => {
+      showArticle(e);
+      // selectFavoriteArticle(e);
+    });
   }
 }
 

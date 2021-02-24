@@ -1,7 +1,8 @@
 import dateConverter from '../utils/dateConverter';
+import Articles from '../interface/Articles';
 
-const getArticlesHtml = async (articlesInfo: any) => {
-  return articlesInfo.map((articleInfo: any) => {
+const getArticlesHtml = async (articlesInfo: Articles[]) => {
+  return articlesInfo.map((articleInfo: Articles) => {
     const authorInfo = articleInfo.author;
     const tagList = articleInfo.tagList.map((tag: any) => `<li class="tag-default tag-pill tag-outline">${tag}</li>`).join('');
     return `<div class="article-preview">
@@ -12,7 +13,7 @@ const getArticlesHtml = async (articlesInfo: any) => {
           <span class="date">${dateConverter(articleInfo.createdAt)}</span>
         </div>
         <button class="btn btn-outline-primary btn-sm pull-xs-right">
-          <i class="ion-heart"></i> ${authorInfo.favorited ? authorInfo.favoritesCount : 0}
+          <i class="ion-heart"></i> ${articleInfo.favorited ? articleInfo.favoritesCount : 0}
         </button>
       </div>
       <a href="/article@${articleInfo.slug}" class="preview-link">

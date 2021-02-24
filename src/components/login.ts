@@ -1,7 +1,6 @@
 import axios from 'axios';
 import View from '../utils/View';
-import navigateTo from '../utils/navigateTo';
-import renderHeader from '../components/renderHeader';
+import switchHeaderNav from './switchHeaderNav';
 
 class Login extends View {
   constructor() {
@@ -45,20 +44,18 @@ class Login extends View {
   }
 
   eventBinding(): void {
-    const $inputEmail = document.querySelector('.login-input-email') as HTMLInputElement;
-    const $inputPassword = document.querySelector('.login-input-pw') as HTMLInputElement;
     const $loginBtn = document.querySelector('.login-btn') as HTMLButtonElement;
     const $loginContainer = document.querySelector('.login-container') as HTMLDivElement;
     const $errorMessages = document.createElement('ul') as HTMLUListElement;
 
-    $loginContainer.insertBefore($errorMessages, $loginContainer.lastElementChild);
-    $errorMessages.classList.add('error-messages');
-
-    $loginBtn.addEventListener('click', async e => {
+    const signin = async (e: MouseEvent) => {
       try {
         e.preventDefault();
         
-        const userToken = await (await axios.post('https://conduit.productionready.io/api/users/login', {
+        const $inputEmail = document.querySelector('.login-input-email') as HTMLInputElement;
+        const $inputPassword = document.querySelector('.login-input-pw') as HTMLInputElement;
+
+        const userToken: string = await (await axios.post('https://conduit.productionready.io/api/users/login', {
           user: {
             email: $inputEmail.value,
             password: $inputPassword.value
@@ -66,12 +63,7 @@ class Login extends View {
         })).data.user.token;
 
         localStorage.setItem('JWT', userToken);
-        
-        const $header = document.querySelector('header') as HTMLElement;
-
-        $header.innerHTML = await renderHeader();
-        
-        navigateTo('/');
+        switchHeaderNav();
 
         $errorMessages.innerHTML = '';
         $inputEmail.value = '';
@@ -82,7 +74,12 @@ class Login extends View {
         
         $errorMessages.innerHTML = `<li>${errorName} ${errorMessage}</li>`;
       }
-    });
+    };
+
+    $loginContainer.insertBefore($errorMessages, $loginContainer.lastElementChild);
+    $errorMessages.classList.add('error-messages');
+
+    $loginBtn.addEventListener('click', signin);
   }
 }
 
