@@ -100,14 +100,14 @@ class Home extends View {
               <div class="article-meta">
                 <a href="/profile"><img src="${post.author.image}"/></a>
                 <div class="info">
-                  <a href="/profile" class="author">${post.author.username}</a>
+                  <a href="/profile@${post.author.username}" class="author">${post.author.username}</a>
                   <span class="date">${dateConverter(post.createdAt)}</span>
                 </div>
                 <button class="btn btn-outline-primary btn-sm pull-xs-right">
                   <i class="ion-heart"></i> ${post.favoritesCount}
                 </button>
               </div>
-              <a id="${post.slug}" href="/article/${post.slug}" class="preview-link">
+              <a href="/article@${post.slug}" class="preview-link">
                 <h1>${post.title}</h1>
                 <p>${post.description}</p>
                 <span>Read more...</span>
