@@ -4,21 +4,9 @@ import fetchArticles from './fetchArticles';
 import navigateTo from '../utils/navigateTo';
 import dateConverter from '../utils/dateConverter';
 import articlesSkeleton from './articlesSkeleton';
+import Article from '../interface/Articles';
 
-interface Articles {
-  author: { bio: string | null, following: boolean, image: string, username: string };
-  body: string;
-  createdAt: string;
-  description: string;
-  favorited: boolean;
-  favoritesCount: boolean;
-  slug: string;
-  tagList: string[];
-  title: string;
-  updateAt: string;
-}
-
-let posts: Articles[] = [];
+let posts: Article[] = [];
 let tags: string[] = [];
 
 class Home extends View {

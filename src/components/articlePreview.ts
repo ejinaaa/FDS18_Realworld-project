@@ -5,25 +5,8 @@ import fetchArticles from './fetchArticles';
 import getData from './getData';
 import dateConverter from '../utils/dateConverter';
 import navigateTo from '../utils/navigateTo';
-
-interface UserInfo {
-  bio: string;
-  createdAt: string;
-  email: string;
-  id: number;
-  image: string;
-  token: string;
-  updateAt: string;
-  username: string;
-}
-
-interface comment {
-  author: { bio: string, following: boolean, image: string, username: string };
-  body: string;
-  createdAt: string;
-  id: number;
-  updatedAt: string;
-}
+import UserInfo from '../interface/UserInfo';
+import Comment from '../interface/Comment';
 
 let isLoading = false;
 let nowSlug = '';
@@ -44,7 +27,7 @@ class Article extends View {
 
   async getHtml(): Promise<string> {
     nowSlug = window.location.pathname.split('@')[1];
-    currentUserInfo = (await getData('user')).data.user;
+    currentUserInfo = (await getData('user')).user;
     
     const articleData = (await axios.get(`https://conduit.productionready.io/api/articles/${nowSlug}`)).data.article;
     const author = articleData.author;
@@ -124,7 +107,7 @@ class Article extends View {
             </form>
             
             <section class="comments-section">
-              ${commentsData.map((comment: comment) => `
+              ${commentsData.map((comment: Comment) => `
               <div id="${comment.id}" class="card">
                 <div class="card-block">
                   <p class="card-text">${comment.body}</p>
@@ -167,7 +150,7 @@ class Article extends View {
 
       if ($commentBody.value.trim() === '') return;
 
-      const resComment: comment = ( await axios.post(`https://conduit.productionready.io/api/articles/${nowSlug}/comments`, {
+      const resComment: Comment = ( await axios.post(`https://conduit.productionready.io/api/articles/${nowSlug}/comments`, {
         comment: {
           body: $commentBody.value
         }
