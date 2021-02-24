@@ -56,9 +56,10 @@ class Profile extends View {
 
   // eslint-disable-next-line class-methods-use-this
   async getHtml(): Promise<string> {
-    const userInfo = await (await getData('user')).user;
+    const slug = window.location.pathname.split('@')[1];
+    const userInfo = await (await getData(`/profiles/${slug}`)).profile;
     const [ userImgUrl, userName, userBio ] = [ userInfo.image, userInfo.username, userInfo.bio ];
-    const userArticlesInfo = await (await getData(`articles/?author=${userName}&limit=10`)).articles;
+    const userArticlesInfo = await (await getData(`articles/?author=${slug === userName ? userName : slug}&limit=10`)).articles;
 
     return `<div class="profile-page">
     <div class="user-info">
@@ -111,7 +112,8 @@ class Profile extends View {
 
       $articlesContainer.innerHTML = articlesSkeleton();
       
-      const userName = await (await getData('user')).user.username;
+      const slug = window.location.pathname.split('@')[1];
+      const userName = await (await getData(`/profiles/${slug}`)).profile.username;
       const userArticlesInfo = await (await getData(`articles/?author=${userName}&limit=10`)).articles;
       const favoritedArticlesInfo = await (await getData(`articles/?favorited=${userName}&limit=10`)).articles;
 
