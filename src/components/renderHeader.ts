@@ -7,7 +7,7 @@ const renderHeader = async () => {
   
   if (userToken) {
       const userInfo = await getData('user'); 
-      userName = userInfo.data.user.username;
+      userName = await userInfo.data.user.username;
   }
 
   return `<nav class="navbar navbar-light">

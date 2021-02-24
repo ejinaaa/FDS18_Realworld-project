@@ -64,7 +64,7 @@ class Login extends View {
             password: $inputPassword.value
           }
         });
-        const token: string = userInfo.data.user.token;
+        const token: string = await userInfo.data.user.token;
 
         localStorage.setItem('JWT', token);
         const $header = document.querySelector('header') as HTMLElement;
