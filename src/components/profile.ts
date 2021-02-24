@@ -1,17 +1,17 @@
 import View from '../utils/View';
 import getData from './getData';
-import navigateTo from '../utils/navigateTo';
-import renderHeader from '../components/renderHeader';
 import getArticlesHtml from '../components/getArticlesHtml';
 import articlesSkeleton from './articlesSkeleton';
+import switchHeaderNav from './switchHeaderNav';
+import followUser from './followUser';
+import unfollowUser from './unfollowUser';
+import showArticle from './showArticle';
+import switchArticleSection from './switchArticleSection';
 
 class Profile extends View {
-  private articleState: string | null;
-
   constructor() {
     super();
     this.setTitle('settings');
-    this.articleState = 'My Articles';
   }
 
   skeleton() {
@@ -20,13 +20,10 @@ class Profile extends View {
       <div class="container">
         <div class="row">
   
-          <div class="col-xs-12 col-md-10 offset-md-1">
+          <div class="col-xs-12 col-md-10 offset-md-1" style="height: 209px">
             <img src="https://static.productionready.io/images/smiley-cyrus.jpg" class="user-img" />
             <h4 style="width: 200px; height: 26px; background-color: #ccc; margin: 0 auto 8px auto;"></h4>
             <p style="width: 200px; height: 24px; background-color: #ccc; margin: 0 auto 8px auto;"></p>
-            <button class="btn btn-sm btn-outline-secondary action-btn signout-btn" style="color: #b85c5c; border: 1px solid #b85c5c">
-              Sign out
-            </button>
           </div>
         </div>
       </div>
@@ -57,22 +54,21 @@ class Profile extends View {
   // eslint-disable-next-line class-methods-use-this
   async getHtml(): Promise<string> {
     const slug = window.location.pathname.split('@')[1];
+    const myName = await (await getData('user')).user.username;
     const userInfo = await (await getData(`/profiles/${slug}`)).profile;
-    const [ userImgUrl, userName, userBio ] = [ userInfo.image, userInfo.username, userInfo.bio ];
-    const userArticlesInfo = await (await getData(`articles/?author=${slug === userName ? userName : slug}&limit=10`)).articles;
+    const userArticlesInfo = await (await getData(`articles/?author=${slug}&limit=10`)).articles;
+    const [ userImgUrl, userName, userBio, userFollowing ] = [ userInfo.image, userInfo.username, userInfo.bio, userInfo.following ];
 
     return `<div class="profile-page">
     <div class="user-info">
       <div class="container">
         <div class="row">
   
-          <div class="col-xs-12 col-md-10 offset-md-1">
+          <div class="col-xs-12 col-md-10 offset-md-1" style="height: 209px">
             <img src="${userImgUrl ? userImgUrl : 'https://static.productionready.io/images/smiley-cyrus.jpg'}" class="user-img" />
             <h4>${userName ? userName : ''}</h4>
             <p>${userBio ? userBio : ''}</p>
-            <button class="btn btn-sm btn-outline-secondary action-btn signout-btn" style="color: #b85c5c; border: 1px solid #b85c5c">
-              Sign out
-            </button>
+            <button class="btn btn-sm btn-outline-secondary action-btn" style="position: absolute; right: 10px; bottom: 10px; color: ${slug === myName? '#b85c5c' : ''}; border-color: ${slug === myName? '#b85c5c' : ''}">${slug === myName? 'Sign out' : userFollowing ? 'Unfollow' : 'Follow'}</button>
           </div>
         </div>
       </div>
@@ -101,51 +97,24 @@ class Profile extends View {
   }
 
   async eventBinding(): Promise<void> {
-    const $signoutBtn = document.querySelector('.signout-btn') as HTMLButtonElement;
+    const $signoutFollowBtn = document.querySelector('.profile-page .btn') as HTMLButtonElement;
     const $articleTab = document.querySelector('.nav-pills') as HTMLUListElement;
     const $articleContainer = document.querySelector('.articles-container') as HTMLDivElement;
 
-    $articleTab.addEventListener('click', async e => {
-      const target = e.target as HTMLButtonElement;
-      const $articlesContainer = document.querySelector('.articles-container') as HTMLElement;
-      const articleTabs = document.querySelectorAll('.nav-link');
-
-      $articlesContainer.innerHTML = articlesSkeleton();
-      
-      const slug = window.location.pathname.split('@')[1];
-      const userName = await (await getData(`/profiles/${slug}`)).profile.username;
-      const userArticlesInfo = await (await getData(`articles/?author=${userName}&limit=10`)).articles;
-      const favoritedArticlesInfo = await (await getData(`articles/?favorited=${userName}&limit=10`)).articles;
-
-      if (!target.matches('.nav-link')) return;
-
-      this.articleState = target.textContent;
-
-      $articlesContainer.innerHTML = this.articleState === 'My Articles' ? await getArticlesHtml(userArticlesInfo) : await getArticlesHtml(favoritedArticlesInfo);
-
-      articleTabs.forEach(tab => tab.classList.remove('active'));
-      target.classList.add('active');
-    });
-
-    $signoutBtn.addEventListener('click', async () => {
-      const $header = document.querySelector('header') as HTMLElement;
-
+    const signout = () => {
       localStorage.removeItem('JWT');
+      switchHeaderNav();
+    };
 
-      $header.innerHTML = await renderHeader();
-
-      navigateTo('/');
+    $signoutFollowBtn.addEventListener('click', (e: MouseEvent) => {
+      const target = e.target as HTMLButtonElement;
+      
+      if (target.textContent === 'Sign out') signout();
+      if (target.textContent === 'Follow') followUser(target);
+      if (target.textContent === 'Unfollow') unfollowUser(target);
     });
-
-    $articleContainer.addEventListener('click', e => {
-      const target = e.target as HTMLElement;
-      const parentNode = target.parentNode as HTMLAnchorElement;
-
-      if (!target.matches('[href] > *')) return;
-
-      e.preventDefault();
-      navigateTo(parentNode.href);
-    });
+    $articleTab.addEventListener('click', switchArticleSection);
+    $articleContainer.addEventListener('click', showArticle);
   }
 }
 
