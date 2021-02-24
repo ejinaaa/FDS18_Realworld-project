@@ -4,6 +4,7 @@ import Register from '../components/register';
 import Article from '../components/articlePreview';
 import Edit from '../components/edit';
 import Settings from '../components/settings';
+import Profile from '../components/profile';
 
 const $root = document.getElementById('root') as HTMLDivElement;
 
@@ -14,7 +15,8 @@ const routerHandler = async () => {
     { path: '/register', View: Register },
     { path: '/article', View: Article },
     { path: '/editor', View: Edit },
-    { path: '/settings', View: Settings }
+    { path: '/settings', View: Settings },
+    { path: '/profile', View: Profile }
   ];
 
   const potentialmatches = routes.map(route => ({
