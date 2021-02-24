@@ -10,7 +10,7 @@ const $root = document.getElementById('root') as HTMLDivElement;
 
 const routerHandler = async () => {
   const routes = [
-    { path: '/', View: Home },
+    { path: '/home', View: Home },
     { path: '/login', View: Login },
     { path: '/register', View: Register },
     { path: '/article', View: Article },
@@ -19,12 +19,16 @@ const routerHandler = async () => {
     { path: '/profile', View: Profile }
   ];
 
+  
   const potentialmatches = routes.map(route => ({
     route,
-    isMatch: window.location.pathname === route.path
+    // pathname이 route로 시작하는지 검사하는 정규표현식 작성
+    isMatch: new RegExp('^' + route.path).test(window.location.pathname)
   }));
 
   let match = potentialmatches.find(potentialmatch => potentialmatch.isMatch);
+
+  
 
   if (!match) {
     match = {
