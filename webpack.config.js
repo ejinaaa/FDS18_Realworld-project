@@ -32,7 +32,7 @@ module.exports = {
       inject: 'body',
       filename: path.join(__dirname, './server/dist/index.html')
     }),
-    new FaviconsWebpackPlugin('./client/public/favicon.ico')
+    // new FaviconsWebpackPlugin('./client/public/favicon.ico')
   ],
   devServer: {
     historyApiFallback: true
