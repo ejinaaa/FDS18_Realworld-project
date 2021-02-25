@@ -1,6 +1,6 @@
-import axios from 'axios';
 import View from '../utils/View';
 import navigateTo from '../utils/navigateTo';
+import request from '../api/request';
 
 class Edit extends View {
   constructor() {
@@ -55,17 +55,9 @@ class Edit extends View {
       const title = $articleTitle.value;
       const description = $articleDescription.value;
       const body = $articleBody.value;
-      const tagList = $articleTagList.value;
+      const tagList = $articleTagList.value.split(',');
 
-      axios.post('https://conduit.productionready.io/api/articles', {
-        article: {
-        title,
-        description,
-        body,
-        tagList
-        }
-      },
-      { headers: { Authorization: `Token ${this.USER_TOKEN}` } });
+      request.createAticle(title, description, body, tagList);
 
       navigateTo('/');
     });
