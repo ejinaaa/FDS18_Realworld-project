@@ -4,7 +4,7 @@ const API_URL = 'https://conduit.productionready.io/api';
 
 // 요청 후 받은 응답의 status를 보고 검사해야 하기 때문에 .data를 반환하지 않았음
 const request = {
-  async getMyInfo() {
+  async getCurrentUserInfo() {
     const userToken: string | null = localStorage.getItem('JWT');
     return await axios.get(`${API_URL}/user`, {
       headers: {
@@ -126,7 +126,7 @@ const request = {
     });
   },
 
-  async deleteComment(slug: string, commentId: string) {
+  async deleteComment(slug: string, commentId: number) {
     const userToken: string | null = localStorage.getItem('JWT');
     return await axios.delete(`${API_URL}/articles/${slug}/comments/${commentId}`, {
       headers: {
