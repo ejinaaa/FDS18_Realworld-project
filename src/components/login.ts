@@ -1,5 +1,5 @@
-import axios from 'axios';
 import View from '../utils/View';
+import request from '../api/request';
 import switchHeaderNav from './switchHeaderNav';
 
 class Login extends View {
@@ -54,13 +54,10 @@ class Login extends View {
         
         const $inputEmail = document.querySelector('.login-input-email') as HTMLInputElement;
         const $inputPassword = document.querySelector('.login-input-pw') as HTMLInputElement;
+        const email = $inputEmail.value;
+        const password = $inputPassword.value;
 
-        const userToken: string = await (await axios.post('https://conduit.productionready.io/api/users/login', {
-          user: {
-            email: $inputEmail.value,
-            password: $inputPassword.value
-          }
-        })).data.user.token;
+        const userToken: string = (await request.signin(email, password)).data.user.token;
 
         localStorage.setItem('JWT', userToken);
         switchHeaderNav();
