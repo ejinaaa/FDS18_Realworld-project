@@ -1,17 +1,16 @@
-import axios from 'axios';
 import View from '../utils/View';
-import fetchTags from './fetchTags';
-import fetchArticles from './fetchArticles';
-import getData from './getData';
 import dateConverter from '../utils/dateConverter';
 import navigateTo from '../utils/navigateTo';
 import UserInfo from '../interface/UserInfo';
 import Comment from '../interface/Comment';
+import request from '../api/request';
+import Articles from '../interface/Articles';
 
 let isLoading = false;
 let nowSlug = '';
 let currentUserInfo: UserInfo;
 let isCurrentUserArticle: boolean = false;
+let nowArticleData: Articles;
 
 class Article extends View {
   private slug: string = '';
@@ -103,11 +102,11 @@ class Article extends View {
 
   async getHtml(): Promise<string> {
     nowSlug = window.location.pathname.split('@')[1];
-    currentUserInfo = (await getData('user')).user;
+    currentUserInfo = (await request.getCurrentUserInfo()).data.user;
     
-    const articleData = (await axios.get(`https://conduit.productionready.io/api/articles/${nowSlug}`)).data.article;
-    const author = articleData.author;
-    const commentsData = (await axios.get(`https://conduit.productionready.io/api/articles/${nowSlug}/comments`)).data.comments;
+    nowArticleData = (await request.getArticle(nowSlug)).data.article;
+    const author = nowArticleData.author
+    const commentsData = (await request.getComments(nowSlug)).data.comments;
 
     isCurrentUserArticle = currentUserInfo.username === author.username;
 
@@ -118,20 +117,20 @@ class Article extends View {
       <div class="banner">
         <div class="container">
     
-          <h1>${articleData.title}</h1>
+          <h1>${nowArticleData.title}</h1>
     
           <div class="article-meta">
             <a href="/profile@${author.username}"><img src="${author.image}"/></a>
             <div class="info">
               <a href="/profile@${author.username}" class="author">${author.username}</a>
-              <span class="date">${dateConverter(articleData.createdAt)}</span>
+              <span class="date">${dateConverter(nowArticleData.createdAt)}</span>
             </div>
-            <button class="btn btn-sm btn-outline-secondary">
+            <button class="btn btn-sm btn-outline-secondary ${isCurrentUserArticle ? 'edit-article-btn' : 'follow-user-btn'}">
               ${isCurrentUserArticle ? `<i class="ion-edit"></i> Edit Article` : `<i class="ion-plus-round"></i> Follow ${author.username}`}
             </button>
             &nbsp;
-            <button class="btn btn-sm ${isCurrentUserArticle ? 'btn-outline-danger' : 'btn-outline-primary'}">
-              ${isCurrentUserArticle ? `<i class="ion-trash-a"></i> Delete Article` :  `<i class="ion-heart"></i> Favorite Post <span class="counter">(${articleData.favoritesCount})</span>`}
+            <button class="btn btn-sm ${isCurrentUserArticle ? 'btn-outline-danger delete-article-btn' : 'btn-outline-primary favorite-article-btn'}">
+              ${isCurrentUserArticle ? `<i class="ion-trash-a"></i> Delete Article` :  `<i class="ion-heart"></i> Favorite Post <span class="counter">(${nowArticleData.favoritesCount})</span>`}
             </button>
           </div>
     
@@ -142,7 +141,7 @@ class Article extends View {
     
         <div class="row article-content">
           <div class="col-md-12">
-            <p style="min-height: 250px">${articleData.body}</p>
+            <p style="min-height: 250px">${nowArticleData.body}</p>
           </div>
         </div>
     
@@ -153,15 +152,15 @@ class Article extends View {
             <a href="/profile@${author.username}"><img src="${author.image}" /></a>
             <div class="info">
               <a href="/profile@${author.username}" class="author">${author.username}</a>
-              <span class="date">${dateConverter(articleData.createdAt)}</span>
+              <span class="date">${dateConverter(nowArticleData.createdAt)}</span>
             </div>
     
-            <button class="btn btn-sm btn-outline-secondary">
+            <button class="btn btn-sm btn-outline-secondary ${isCurrentUserArticle ? 'edit-article-btn' : 'follow-user-btn'}">
               ${isCurrentUserArticle ? `<i class="ion-edit"></i> Edit Article` : `<i class="ion-plus-round"></i> Follow ${author.username}`}
             </button>
             &nbsp;
-            <button class="btn btn-sm ${isCurrentUserArticle ? 'btn-outline-danger' : 'btn-outline-primary'}">
-              ${isCurrentUserArticle ? `<i class="ion-trash-a"></i> Delete Article` :  `<i class="ion-heart"></i> Favorite Post <span class="counter">(${articleData.favoritesCount})</span>`}
+            <button class="btn btn-sm ${isCurrentUserArticle ? 'btn-outline-danger delete-article-btn' : 'btn-outline-primary favorite-article-btn'}">
+              ${isCurrentUserArticle ? `<i class="ion-trash-a"></i> Delete Article` :  `<i class="ion-heart"></i> Favorite Post <span class="counter">(${nowArticleData.favoritesCount})</span>`}
             </button>
           </div>
         </div>
@@ -209,6 +208,8 @@ class Article extends View {
     const $articlePage = document.querySelector('.article-page') as HTMLDivElement;
     const $commentForm = document.querySelector('.comment-form') as HTMLFormElement;
     const $commentsSection = document.querySelector('.comments-section') as HTMLElement;
+    const $editArticleBtns = Array.from(document.querySelectorAll('.edit-article-btn'));
+    const $deleteArticleBtns = Array.from(document.querySelectorAll('.delete-article-btn'));
 
     $articlePage.addEventListener('click', e => {
       const target = e.target as HTMLElement;
@@ -224,15 +225,11 @@ class Article extends View {
       const $commentBody = document.querySelector('.comment-body') as HTMLTextAreaElement;
       const $firstComment = $commentsSection.firstChild as HTMLDivElement;
 
-      if ($commentBody.value.trim() === '') return;
+      const commentValue = $commentBody.value;
 
-      const resComment: Comment = ( await axios.post(`https://conduit.productionready.io/api/articles/${nowSlug}/comments`, {
-        comment: {
-          body: $commentBody.value
-        }
-      },
-      { headers: { Authorization: `Token ${this.USER_TOKEN}` }
-      })).data.comment;
+      if (commentValue.trim() === '') return;
+
+      const resComment: Comment = ( await request.createComment(nowSlug, commentValue)).data.comment;
 
       $commentBody.value = '';
       $commentBody.focus();
@@ -276,16 +273,26 @@ class Article extends View {
       
       try {
 
-        const res = await axios.delete(`https://conduit.productionready.io/api/articles/${nowSlug}/comments/${commentId}`, {
-          headers: {
-            Authorization: `Token ${this.USER_TOKEN}`
-          }
-        });
+        const res = await request.deleteComment(nowSlug, commentId);
         
         if (res.status === 200) idOwningNode.remove();
       } catch(error) {
         throw new Error(error);
       }
+    });
+
+    $editArticleBtns.forEach($editArticleBtn => { 
+      $editArticleBtn.addEventListener('click', async () => {
+        navigateTo(`/editor@${nowSlug}`);
+      });
+    });
+    
+    $deleteArticleBtns.forEach($deleteArticleBtn => {
+      $deleteArticleBtn.addEventListener('click', () => {
+        const nowArticleAuthorName = nowArticleData.author.username;
+        request.deleteArticle(nowSlug);
+        navigateTo('/home');
+      });
     });
   }
 }

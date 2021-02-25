@@ -98,7 +98,20 @@ const request = {
 
   async createAticle(title: string, description: string, body: string, tagList: string[]) {
     const userToken: string | null = localStorage.getItem('JWT');
-    axios.post('https://conduit.productionready.io/api/articles', {
+    return axios.post('https://conduit.productionready.io/api/articles', {
+      article: {
+        title,
+        description,
+        body,
+        tagList
+      }
+    },
+    { headers: { Authorization: `Token ${userToken}` } });
+  },
+  
+  async updateArticle(slug: string, title: string, description: string, body: string, tagList: string[]) {
+    const userToken: string | null = localStorage.getItem('JWT');
+    return axios.put(`${API_URL}/articles/${slug}`, {
       article: {
       title,
       description,
@@ -106,7 +119,7 @@ const request = {
       tagList
       }
     },
-    { headers: { Authorization: `Token ${userToken}` } })
+    { headers: { Authorization: `Token ${userToken}` } });
   },
 
   async deleteArticle(slug: string) {
