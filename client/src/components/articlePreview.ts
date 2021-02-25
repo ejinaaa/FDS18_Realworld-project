@@ -102,11 +102,17 @@ class Article extends View {
 
   async getHtml(): Promise<string> {
     nowSlug = window.location.pathname.split('@')[1];
-    currentUserInfo = (await request.getCurrentUserInfo()).data.user;
+
+    let commentsData;
+
+    if (this.USER_TOKEN) {
+      currentUserInfo = (await request.getCurrentUserInfo()).data.user;
+      commentsData = (await request.getComments(nowSlug)).data.comments;
+    }
+      
     
     nowArticleData = (await request.getArticle(nowSlug)).data.article;
     const author = nowArticleData.author
-    const commentsData = (await request.getComments(nowSlug)).data.comments;
 
     isCurrentUserArticle = currentUserInfo.username === author.username;
 

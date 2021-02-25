@@ -1,6 +1,5 @@
 import View from '../utils/View';
 import navigateTo from '../utils/navigateTo';
-import settingsSkeleton from './settingsSkeleton';
 import request from '../api/request';
 
 class Settings extends View {
@@ -10,7 +9,7 @@ class Settings extends View {
   }
 
   skeleton(): string {
-    return settingsSkeleton();
+    return '';
   }
 
   // eslint-disable-next-line class-methods-use-this

@@ -3,7 +3,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const FaviconsWebpackPlugin = require('favicons-webpack-plugin');
 
 module.exports = {
-  entry: ['./src/index.ts'],
+  entry: ['./client/src/index.ts'],
   module: {
     rules: [
       {
@@ -23,16 +23,16 @@ module.exports = {
   },
   output: {
     filename: 'bundle.js',
-    path: path.resolve(__dirname, 'dist')
+    path: path.resolve(__dirname, './server/dist/static/js')
   },
   plugins: [
     new HtmlWebpackPlugin({
-      template: path.join(__dirname, './public/index.html'),
-      favicon: './public/favicon.ico',
+      template: path.join(__dirname, './client/public/index.html'),
+      favicon: './client/public/favicon.ico',
       inject: 'body',
-      filename: path.join(__dirname, './dist/index.html')
+      filename: path.join(__dirname, './server/dist/index.html')
     }),
-    new FaviconsWebpackPlugin('./public/favicon.ico')
+    new FaviconsWebpackPlugin('./client/public/favicon.ico')
   ],
   devServer: {
     historyApiFallback: true

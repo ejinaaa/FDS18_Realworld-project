@@ -17,6 +17,7 @@ class Edit extends View {
   }
 
   async getHtml(): Promise<string> {
+    isUpdate = false;
     let title = '';
     let description = '';
     let body = '';

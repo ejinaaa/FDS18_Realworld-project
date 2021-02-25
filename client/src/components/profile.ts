@@ -1,6 +1,6 @@
 import View from '../utils/View';
 import request from '../api/request';
-import getArticlesHtml from '../components/getArticlesHtml';
+import getArticlesHtml from './getArticlesHtml';
 import articlesSkeleton from './articlesSkeleton';
 import switchHeaderNav from './switchHeaderNav';
 import showArticle from './showArticle';

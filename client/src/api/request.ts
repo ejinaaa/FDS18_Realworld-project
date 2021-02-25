@@ -18,12 +18,7 @@ const request = {
   },
   
   async getArticle(slug: string) {
-    const userToken: string | null = localStorage.getItem('JWT');
-    return await axios.get(`${API_URL}/articles/${slug}`, {
-      headers: {
-        Authorization: `Token ${userToken}`
-      }
-    });
+    return await axios.get(`${API_URL}/articles/${slug}`);
   },
   
   async getArticles(param: string) {
