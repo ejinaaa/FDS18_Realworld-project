@@ -5,9 +5,7 @@
   "main": "index.ts",
   "scripts": {
     "build": "webpack -w",
-    "start": "node server/server",
-    "lint": "eslint src/**/*.ts",
-    "lint:fix": "eslint --fix src/**/*.ts"
+    "start": "node server/server"
   },
   "repository": {
     "type": "git",

@@ -38,5 +38,5 @@ module.exports = {
     historyApiFallback: true
   },
   devtool: 'source-map',
-  mode: 'development'
+  mode: 'production'
 };
