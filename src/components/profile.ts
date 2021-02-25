@@ -119,8 +119,10 @@ class Profile extends View {
     });
     $articleTab.addEventListener('click', switchArticleSection);
     $articleContainer.addEventListener('click', (e: MouseEvent) => {
-      showArticle(e);
-      toggleFavoriteArticle(e);
+      const target = e.target as HTMLElement;
+
+      if (target.closest('.preview-link')) showArticle(e);
+      if (target.closest('.btn')) toggleFavoriteArticle(e);
     });
   }
 }
