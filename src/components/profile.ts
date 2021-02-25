@@ -95,21 +95,19 @@ class Profile extends View {
   </div>`;
   }
 
-  async eventBinding(): Promise<void> {
+  eventBinding(): void {
     const $signoutFollowBtn = document.querySelector('.profile-page .btn') as HTMLButtonElement;
     const $articleTab = document.querySelector('.nav-pills') as HTMLUListElement;
     const $articleContainer = document.querySelector('.articles-container') as HTMLDivElement;
-
-    const signout = () => {
-      localStorage.removeItem('JWT');
-      switchHeaderNav();
-    };
 
     $signoutFollowBtn.addEventListener('click', (e: MouseEvent) => {
       const target = e.target as HTMLButtonElement;
       const userName: string = window.location.pathname.split('@')[1];
       
-      if (target.textContent === 'Sign out') signout();
+      if (target.textContent === 'Sign out') {
+        localStorage.removeItem('JWT');
+        switchHeaderNav();
+      }
       if (target.textContent === 'Follow') {
         request.followUser(userName);
         target.textContent = 'Unfollow';

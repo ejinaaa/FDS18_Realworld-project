@@ -67,7 +67,8 @@ class Login extends View {
         $inputPassword.value = '';
       } catch (err) {
         const errorObj = err.response.data.errors;
-        const [ errorName, errorMessage ] = [ Object.keys(errorObj).join(''), Object.values(errorObj).join('') ];
+        const errorName: string[] = Object.keys(errorObj);
+        const errorMessage: string[][] = Object.values(errorObj);
         
         $errorMessages.innerHTML = `<li>${errorName} ${errorMessage}</li>`;
       }
