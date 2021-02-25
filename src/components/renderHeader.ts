@@ -1,16 +1,14 @@
-import getData from "./getData";
 import UserInfo from "../interface/UserInfo";
+import request from "../api/request";
 
 const renderHeader = async () => {
   const userToken: string | null = window.localStorage.getItem('JWT');
   const currentPage: string = window.location.pathname.split('@')[0];
   let userName: string = '';
-  // let userImgUrl: string | null = '';
   
   if (userToken) {
-    const userInfo: UserInfo = await (await getData('user')).user;
+    const userInfo: UserInfo = (await request.getCurrentUserInfo()).data.user;
       userName = userInfo.username; 
-      // userImgUrl = userInfo.image; 
   }
 
   return `<nav class="navbar navbar-light">

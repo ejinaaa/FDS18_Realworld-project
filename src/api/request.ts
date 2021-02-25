@@ -14,11 +14,16 @@ const request = {
   },
   
   async getUserProfile(username: string) {
-    return await axios.get(`${API_URL}/user/${username}`);
+    return await axios.get(`${API_URL}/profiles/${username}`);
   },
   
   async getArticle(slug: string) {
-    return await axios.get(`${API_URL}/articles/${slug}`);
+    const userToken: string | null = localStorage.getItem('JWT');
+    return await axios.get(`${API_URL}/articles/${slug}`, {
+      headers: {
+        Authorization: `Token ${userToken}`
+      }
+    });
   },
   
   async getArticles(param: string) {
@@ -150,7 +155,7 @@ const request = {
 
   async favoriteArticle(slug: string) {
     const userToken: string | null = localStorage.getItem('JWT');
-    return await axios.post(`${API_URL}/articles/${slug}/favorite`, {
+    return await axios.post(`${API_URL}/articles/${slug}/favorite`,null, {
       headers: {
         Authorization: `Token ${userToken}`
       }

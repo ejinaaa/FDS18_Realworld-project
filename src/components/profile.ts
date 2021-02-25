@@ -1,13 +1,11 @@
 import View from '../utils/View';
-import getData from './getData';
+import request from '../api/request';
 import getArticlesHtml from '../components/getArticlesHtml';
 import articlesSkeleton from './articlesSkeleton';
 import switchHeaderNav from './switchHeaderNav';
-import followUser from './followUser';
-import unfollowUser from './unfollowUser';
 import showArticle from './showArticle';
 import switchArticleSection from './switchArticleSection';
-import selectFavoriteArticle from './selectFavoriteArticle';
+import toggleFavoriteArticle from './toggleFavoriteArticle';
 
 class Profile extends View {
   constructor() {
@@ -55,9 +53,9 @@ class Profile extends View {
   // eslint-disable-next-line class-methods-use-this
   async getHtml(): Promise<string> {
     const slug = window.location.pathname.split('@')[1];
-    const myName = await (await getData('user')).user.username;
-    const userInfo = await (await getData(`/profiles/${slug}`)).profile;
-    const userArticlesInfo = await (await getData(`articles/?author=${slug}&limit=10`)).articles;
+    const currentUserName = (await request.getCurrentUserInfo()).data.user.username;
+    const userInfo = (await request.getUserProfile(slug)).data.profile;
+    const userArticlesInfo = (await request.getArticles(`author=${slug}`)).data.articles;
     const [ userImgUrl, userName, userBio, userFollowing ] = [ userInfo.image, userInfo.username, userInfo.bio, userInfo.following ];
 
     return `<div class="profile-page">
@@ -69,7 +67,7 @@ class Profile extends View {
             <img src="${userImgUrl ? userImgUrl : 'https://static.productionready.io/images/smiley-cyrus.jpg'}" class="user-img" />
             <h4>${userName ? userName : ''}</h4>
             <p>${userBio ? userBio : ''}</p>
-            <button class="btn btn-sm btn-outline-secondary action-btn" style="position: absolute; right: 10px; bottom: 10px; color: ${slug === myName? '#b85c5c' : ''}; border-color: ${slug === myName? '#b85c5c' : ''}">${slug === myName? 'Sign out' : userFollowing ? 'Unfollow' : 'Follow'}</button>
+            <button class="btn btn-sm btn-outline-secondary action-btn" style="position: absolute; right: 10px; bottom: 10px; color: ${slug === currentUserName? '#b85c5c' : ''}; border-color: ${slug === currentUserName? '#b85c5c' : ''}">${slug === currentUserName? 'Sign out' : userFollowing ? 'Unfollow' : 'Follow'}</button>
           </div>
         </div>
       </div>
@@ -97,28 +95,32 @@ class Profile extends View {
   </div>`;
   }
 
-  async eventBinding(): Promise<void> {
+  eventBinding(): void {
     const $signoutFollowBtn = document.querySelector('.profile-page .btn') as HTMLButtonElement;
     const $articleTab = document.querySelector('.nav-pills') as HTMLUListElement;
     const $articleContainer = document.querySelector('.articles-container') as HTMLDivElement;
-    // const $articlePreview = document.querySelector('.articles-container') as HTMLDivElement;
-
-    const signout = () => {
-      localStorage.removeItem('JWT');
-      switchHeaderNav();
-    };
 
     $signoutFollowBtn.addEventListener('click', (e: MouseEvent) => {
       const target = e.target as HTMLButtonElement;
+      const userName: string = window.location.pathname.split('@')[1];
       
-      if (target.textContent === 'Sign out') signout();
-      if (target.textContent === 'Follow') followUser(target);
-      if (target.textContent === 'Unfollow') unfollowUser(target);
+      if (target.textContent === 'Sign out') {
+        localStorage.removeItem('JWT');
+        switchHeaderNav();
+      }
+      if (target.textContent === 'Follow') {
+        request.followUser(userName);
+        target.textContent = 'Unfollow';
+      }
+      if (target.textContent === 'Unfollow') {
+        request.unfollowUser(userName);
+        target.textContent = 'Follow';
+      }
     });
     $articleTab.addEventListener('click', switchArticleSection);
     $articleContainer.addEventListener('click', (e: MouseEvent) => {
       showArticle(e);
-      // selectFavoriteArticle(e);
+      toggleFavoriteArticle(e);
     });
   }
 }

@@ -1,6 +1,6 @@
-import axios from 'axios';
 import View from '../utils/View';
 import navigateTo from '../utils/navigateTo';
+import request from '../api/request';
 
 class Register extends View {
   constructor() {
@@ -61,14 +61,11 @@ class Register extends View {
         const $inputName = document.querySelector('.signup-input-name') as HTMLInputElement;
         const $inputEmail = document.querySelector('.signup-input-email') as HTMLInputElement;
         const $inputPassword = document.querySelector('.signup-input-pw') as HTMLInputElement;
+        const name = $inputName.value;
+        const email = $inputEmail.value;
+        const password = $inputPassword.value;
 
-        const userToken: string = await (await axios.post('https://conduit.productionready.io/api/users', {
-          user:{
-            username: $inputName.value,
-            email: $inputEmail.value,
-            password: $inputPassword.value
-          }
-        })).data.user.token;
+        const userToken: string = (await request.signup(name, email, password)).data.user.token;
 
         localStorage.setItem('JWT', userToken);
         navigateTo('/');
