@@ -21,8 +21,7 @@ class Article extends View {
   }
 
   skeleton(): string {
-    return `
-    <div class="article-page">
+    return `<div class="article-page">
 
       <div class="banner">
         <div class="container">
