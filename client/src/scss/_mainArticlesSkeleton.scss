@@ -1,0 +1,82 @@
+$skeletonColor: #f2f2f2;
+$skeletonHeight: 14px;
+
+@keyframes loading {
+  0% {
+    transform: translateX(0);
+  }
+  50%,
+  100% {
+    transform: translateX(675px);
+  }
+}
+
+.skeleton-article-meta {
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.skeleton-info {
+  display: inline-block;
+  padding-top: 5px;
+  margin-left: 5px;
+}
+
+.skeleton-img {
+  display: inline-block;
+  background: $skeletonColor;
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+}
+
+.skeleton-author {
+  display: block;
+  width: 90px;
+  height: $skeletonHeight;
+  background: $skeletonColor;
+}
+
+.skeleton-date {
+  display: inline-block;
+  width: 100px;
+  height: $skeletonHeight;
+  background: $skeletonColor;
+}
+
+.skeleton-heading {
+  width: 85%;
+  height: $skeletonHeight;
+  background: $skeletonColor;
+}
+
+.skeleton-content {
+  width: 90%;
+  height: $skeletonHeight;
+  background: $skeletonColor;
+}
+
+.skeleton-more {
+  display: inline-block;
+  width: 85%;
+  height: $skeletonHeight;
+  background: $skeletonColor;
+}
+
+.skeleton {
+  position: relative;
+  overflow: hidden;
+}
+
+.skeleton::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 30px;
+  height: 100%;
+  background: linear-gradient(to right, #f2f2f2, #ddd, #f2f2f2);
+  animation: loading 2s infinite linear;
+}
