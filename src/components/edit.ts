@@ -71,18 +71,18 @@ class Edit extends View {
     const $articleTagList = document.querySelector('.article-tag-list') as HTMLInputElement;
     const $btnPublish = document.querySelector('.btn-publish') as HTMLButtonElement;
 
-    $btnPublish.addEventListener('click', () => {
+    $btnPublish.addEventListener('click', async () => {
       const title = $articleTitle.value;
       const description = $articleDescription.value;
       const body = $articleBody.value;
       const tagList = $articleTagList.value.split(',');
 
       if(isUpdate) {
-        request.updateArticle(slug as string, title, description, body, tagList);
+        await request.updateArticle(slug as string, title, description, body, tagList);
         navigateTo(`/article@${slug}`);
       }
       else {
-        request.createAticle(title, description, body, tagList);
+        await request.createAticle(title, description, body, tagList);
         navigateTo('/home');
       }
     });
