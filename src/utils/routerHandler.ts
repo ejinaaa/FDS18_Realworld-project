@@ -45,6 +45,7 @@ const routerHandler = async () => {
   const $header = document.querySelector('header') as HTMLElement;
 
   $header.innerHTML = await renderHeader();
+  window.scrollTo(0, 0);
   $main.innerHTML = view.skeleton();
   $main.innerHTML = await view.getHtml();
   

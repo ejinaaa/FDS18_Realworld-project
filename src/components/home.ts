@@ -1,13 +1,17 @@
 import View from '../utils/View';
-import fetchTags from './fetchTags';
-import fetchArticles from './fetchArticles';
 import navigateTo from '../utils/navigateTo';
 import dateConverter from '../utils/dateConverter';
 import articlesSkeleton from './articlesSkeleton';
 import Article from '../interface/Articles';
+import request from '../api/request';
 
 let posts: Article[] = [];
 let tags: string[] = [];
+let nowPage: number = 1;
+let articlesCount = 0;
+let slidesX = 0;
+const ARTICLE_LIMIT = 10;
+const PAGE_MENU_COUNT = 5;
 
 class Home extends View {
   constructor() {
@@ -58,8 +62,10 @@ class Home extends View {
   }
 
   async getHtml(): Promise<string> {
-    posts = await fetchArticles();
-    tags = await fetchTags();
+    const articleData = (await request.getArticles(`limit=${ARTICLE_LIMIT}&offset=${(nowPage - 1) * ARTICLE_LIMIT}`)).data;
+    articlesCount = articleData.articlesCount;
+    posts = articleData.articles;
+    tags = await (await request.getTags()).data.tags;
     
     return `<div class="home-page">
     <div class="banner">
@@ -101,7 +107,21 @@ class Home extends View {
                 <span>Read more...</span>
               </a>
             </div>`}).join('')}
-          
+            <div class="pagination-wraper">
+              <ul class="pagination">
+                <li class="page-item"><a class="page-link move-first-page">&lt;&lt;</a></li>
+                <li class="page-item"><a class="page-link move-prev-page"> &lt; </a></li>
+                <li class="page-slides">
+                  <ul class="page-numbers" style="transform: translateX(-${slidesX}px)">
+                    ${Array.from({ length: articlesCount / ARTICLE_LIMIT }, (_, i) => i + 1).map(page => {
+                      return `<li class="page-item ${+nowPage === page ? 'active' : ''}"><a class="page-link page-number">${page}</a></li>`
+                    }).join('')}
+                  </ul>
+                </li>
+                <li class="page-item"><a class="page-link move-next-page"> &gt; </a></li>
+                <li class="page-item"><a class="page-link move-last-page">&gt;&gt;</a></li>
+              </ul>
+            </div>
         </div>
   
         <div class="col-md-3">
@@ -122,6 +142,12 @@ class Home extends View {
 
   eventBinding(): void {
     const $colMd9 = document.querySelector('.col-md-9') as HTMLDivElement;
+    const $pagination = document.querySelector('.pagination') as HTMLUListElement;
+    const $pageNumbers = document.querySelector('.page-numbers') as HTMLUListElement;
+    const $moveFirstPage = document.querySelector('.move-first-page') as HTMLAnchorElement;
+    const $movePrevPage = document.querySelector('.move-prev-page') as HTMLAnchorElement;
+    const $moveNextPage = document.querySelector('.move-next-page') as HTMLAnchorElement;
+    const $moveLastPage = document.querySelector('.move-last-page') as HTMLAnchorElement;
 
     $colMd9.addEventListener('click', e => {
       const target = e.target as HTMLElement;
@@ -130,6 +156,43 @@ class Home extends View {
         e.preventDefault();
         navigateTo(parentNode.href);
       }
+    });
+
+    $pagination.addEventListener('click', async (e) => {
+      const target = e.target as HTMLAnchorElement;
+      const pageListItem = target.parentNode as HTMLLIElement;
+
+      if (!target.classList.contains('page-number') || pageListItem.classList.contains('active')) return;
+
+      const pageNumber = target.textContent as unknown as number;
+      nowPage = pageNumber;
+
+      navigateTo(`/home`);
+    });
+
+    $moveFirstPage.addEventListener('click', () => {
+      slidesX = 0;
+      $pageNumbers.style.transform = `translateX(-${slidesX}px)`;
+    });
+    $movePrevPage.addEventListener('click', () => {
+      slidesX -= ($pageNumbers.clientWidth - 2);
+      if (slidesX < 0) {
+        slidesX = 0
+        return;
+      }
+      $pageNumbers.style.transform = `translateX(-${slidesX}px)`;
+    });
+    $moveNextPage.addEventListener('click', () => {
+      slidesX += ($pageNumbers.clientWidth - 2);
+      if (slidesX > $pageNumbers.scrollWidth - 5) {
+        slidesX = $pageNumbers.scrollWidth - 195;
+        return;
+      }
+      $pageNumbers.style.transform = `translateX(-${slidesX}px)`;
+    });
+    $moveLastPage.addEventListener('click', () => {
+      slidesX = $pageNumbers.scrollWidth - $pageNumbers.clientWidth;
+      $pageNumbers.style.transform = `translateX(-${slidesX}px)`;
     });
   }
 }
