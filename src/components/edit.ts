@@ -1,6 +1,10 @@
 import View from '../utils/View';
 import navigateTo from '../utils/navigateTo';
 import request from '../api/request';
+import Article from '../interface/Articles';
+
+let isUpdate = false;
+let slug: string | undefined = '';
 
 class Edit extends View {
   constructor() {
@@ -13,6 +17,22 @@ class Edit extends View {
   }
 
   async getHtml(): Promise<string> {
+    let title = '';
+    let description = '';
+    let body = '';
+    let tags: string[] = [];
+
+    slug = location.pathname.split('@')[1];
+    if(slug) isUpdate = true;
+
+    if(isUpdate) {
+      const editArticleData: Article = (await request.getArticle(slug)).data.article;
+
+      title = editArticleData.title;
+      description = editArticleData.description;
+      body = editArticleData.body;
+      tags = editArticleData.tagList;
+    }
     return `<div class="editor-page">
     <div class="container page">
       <div class="row">
@@ -21,16 +41,16 @@ class Edit extends View {
           <form>
             <fieldset>
               <fieldset class="form-group">
-                  <input type="text" class="article-title form-control form-control-lg" placeholder="Article Title">
+                  <input type="text" class="article-title form-control form-control-lg" placeholder="Article Title" value="${title}">
               </fieldset>
               <fieldset class="form-group">
-                  <input type="text" class="article-description form-control" placeholder="What's this article about?">
+                  <input type="text" class="article-description form-control" placeholder="What's this article about?" value="${description}">
               </fieldset>
               <fieldset class="form-group">
-                  <textarea class="article-body form-control" rows="8" placeholder="Write your article (in markdown)"></textarea>
+                  <textarea class="article-body form-control" rows="8" placeholder="Write your article (in markdown)">${body}</textarea>
               </fieldset>
               <fieldset class="form-group">
-                  <input type="text" class="article-tag-list form-control" placeholder="Enter tags"><div class="tag-list"></div>
+                  <input type="text" class="article-tag-list form-control" placeholder="Enter tags" value="${tags}"><div class="tag-list"></div>
               </fieldset>
               <button class="btn btn-lg btn-publish pull-xs-right btn-primary" type="button">
                   Publish Article
@@ -57,9 +77,14 @@ class Edit extends View {
       const body = $articleBody.value;
       const tagList = $articleTagList.value.split(',');
 
-      request.createAticle(title, description, body, tagList);
-
-      navigateTo('/');
+      if(isUpdate) {
+        request.updateArticle(slug as string, title, description, body, tagList);
+        navigateTo(`/article@${slug}`);
+      }
+      else {
+        request.createAticle(title, description, body, tagList);
+        navigateTo('/home');
+      }
     });
   }
 }
