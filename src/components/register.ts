@@ -1,4 +1,4 @@
-import axios, { AxiosResponse } from 'axios';
+import axios from 'axios';
 import View from '../utils/View';
 import navigateTo from '../utils/navigateTo';
 
@@ -50,21 +50,19 @@ class Register extends View {
   }
 
   eventBinding(): void {
-    const $inputName = document.querySelector('.signup-input-name') as HTMLInputElement;
-    const $inputEmail = document.querySelector('.signup-input-email') as HTMLInputElement;
-    const $inputPassword = document.querySelector('.signup-input-pw') as HTMLInputElement;
     const $signupBtn = document.querySelector('.signup-btn') as HTMLButtonElement;
     const $signupContainer = document.querySelector('.signup-container') as HTMLDivElement;
     const $errorMessages = document.createElement('ul') as HTMLUListElement;
 
-    $signupContainer.insertBefore($errorMessages, $signupContainer.lastElementChild);
-    $errorMessages.classList.add('error-messages');
-    
-    $signupBtn.addEventListener('click', async e => {
+    const signup = async (e: MouseEvent) => {
       try {
         e.preventDefault();
         
-        const userToken = await (await axios.post('https://conduit.productionready.io/api/users', {
+        const $inputName = document.querySelector('.signup-input-name') as HTMLInputElement;
+        const $inputEmail = document.querySelector('.signup-input-email') as HTMLInputElement;
+        const $inputPassword = document.querySelector('.signup-input-pw') as HTMLInputElement;
+
+        const userToken: string = await (await axios.post('https://conduit.productionready.io/api/users', {
           user:{
             username: $inputName.value,
             email: $inputEmail.value,
@@ -73,7 +71,6 @@ class Register extends View {
         })).data.user.token;
 
         localStorage.setItem('JWT', userToken);
-        
         navigateTo('/');
 
         $errorMessages.innerHTML = '';
@@ -82,15 +79,19 @@ class Register extends View {
         $inputPassword.value = '';
       } catch (err) {
         const errorObj = err.response.data.errors;
-        const [ errorNames, errorMessages ] = [ Object.keys(errorObj), Object.values(errorObj) ];
-        // const errorNames = Object.keys(errorObj);
-        // const errorMessages = Object.values(errorObj);
+        const errorNames: string[] = Object.keys(errorObj);
+        const errorMessages: string[][] = Object.values(errorObj);
         
-        $errorMessages.innerHTML = errorMessages.map((message: any, index) => {
+        $errorMessages.innerHTML = errorMessages.map((message: string[], index) => {
           return `<li>${errorNames[index]} ${message.join(', ')}</li>`
         }).join('');
       }
-    });
+    };
+
+    $signupContainer.insertBefore($errorMessages, $signupContainer.lastElementChild);
+    $errorMessages.classList.add('error-messages');
+    
+    $signupBtn.addEventListener('click', signup);
   }
 }
 

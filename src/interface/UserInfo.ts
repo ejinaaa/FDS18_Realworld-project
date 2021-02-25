@@ -3,7 +3,7 @@ interface UserInfo {
   createdAt: string;
   email: string;
   id: number;
-  image: string;
+  image: string | null;
   token: string;
   updateAt: string;
   username: string;
