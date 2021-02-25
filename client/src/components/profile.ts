@@ -53,7 +53,10 @@ class Profile extends View {
   // eslint-disable-next-line class-methods-use-this
   async getHtml(): Promise<string> {
     const slug = window.location.pathname.split('@')[1];
-    const currentUserName = (await request.getCurrentUserInfo()).data.user.username;
+    let currentUserName;
+    if (this.USER_TOKEN) {
+      currentUserName = (await request.getCurrentUserInfo()).data.user.username;
+    }
     const userInfo = (await request.getUserProfile(slug)).data.profile;
     const userArticlesInfo = (await request.getArticles(`author=${slug}`)).data.articles;
     const [ userImgUrl, userName, userBio, userFollowing ] = [ userInfo.image, userInfo.username, userInfo.bio, userInfo.following ];
@@ -67,7 +70,7 @@ class Profile extends View {
             <img src="${userImgUrl ? userImgUrl : 'https://static.productionready.io/images/smiley-cyrus.jpg'}" class="user-img" />
             <h4>${userName ? userName : ''}</h4>
             <p>${userBio ? userBio : ''}</p>
-            <button class="btn btn-sm btn-outline-secondary action-btn" style="position: absolute; right: 10px; bottom: 10px; color: ${slug === currentUserName? '#b85c5c' : ''}; border-color: ${slug === currentUserName? '#b85c5c' : ''}">${slug === currentUserName? 'Sign out' : userFollowing ? 'Unfollow' : 'Follow'}</button>
+            ${this.USER_TOKEN ? `<button class="btn btn-sm btn-outline-secondary action-btn" style="position: absolute; right: 10px; bottom: 10px; color: ${slug === currentUserName? '#b85c5c' : ''}; border-color: ${slug === currentUserName? '#b85c5c' : ''}">${slug === currentUserName? 'Sign out' : userFollowing ? 'Unfollow' : 'Follow'}</button>` : ''}
           </div>
         </div>
       </div>
@@ -119,8 +122,10 @@ class Profile extends View {
     });
     $articleTab.addEventListener('click', switchArticleSection);
     $articleContainer.addEventListener('click', (e: MouseEvent) => {
-      showArticle(e);
-      toggleFavoriteArticle(e);
+      const target = e.target as HTMLElement;
+
+      if (target.closest('.preview-link')) showArticle(e);
+      if (target.closest('.btn')) toggleFavoriteArticle(e);
     });
   }
 }

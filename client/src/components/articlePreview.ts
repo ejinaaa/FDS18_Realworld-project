@@ -21,8 +21,7 @@ class Article extends View {
   }
 
   skeleton(): string {
-    return `
-    <div class="article-page">
+    return `<div class="article-page">
 
       <div class="banner">
         <div class="container">
@@ -103,18 +102,17 @@ class Article extends View {
   async getHtml(): Promise<string> {
     nowSlug = window.location.pathname.split('@')[1];
 
-    let commentsData;
+    nowArticleData = (await request.getArticle(nowSlug)).data.article;
+    const author = nowArticleData.author
+    const commentsData = (await request.getComments(nowSlug)).data.comments;
 
     if (this.USER_TOKEN) {
       currentUserInfo = (await request.getCurrentUserInfo()).data.user;
-      commentsData = (await request.getComments(nowSlug)).data.comments;
+      isCurrentUserArticle = currentUserInfo.username === author.username;
     }
       
     
-    nowArticleData = (await request.getArticle(nowSlug)).data.article;
-    const author = nowArticleData.author
 
-    isCurrentUserArticle = currentUserInfo.username === author.username;
 
     isLoading = true;
     
@@ -179,12 +177,14 @@ class Article extends View {
               <div class="card-block">
                 <textarea class="form-control comment-body" placeholder="Write a comment..." rows="3"></textarea>
               </div>
-              <div class="card-footer">
+              ${currentUserInfo ? 
+              `<div class="card-footer">
                 <img src="${currentUserInfo.image}" class="comment-author-img" />
                 <button class="btn btn-sm btn-primary">
                   Post Comment
                 </button>
-              </div>
+              </div>` : ''
+              }
             </form>
             
             <section class="comments-section">
