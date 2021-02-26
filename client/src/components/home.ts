@@ -1,9 +1,12 @@
 import View from '../utils/View';
 import navigateTo from '../utils/navigateTo';
-import dateConverter from '../utils/dateConverter';
 import articlesSkeleton from './articlesSkeleton';
 import Article from '../interface/Articles';
 import request from '../api/request';
+import getArticlesHtml from './getArticlesHtml';
+import showArticle from './showArticle';
+import toggleFavoriteArticle from './toggleFavoriteArticle';
+import switchArticleSection from './switchArticleSection';
 
 let posts: Article[] = [];
 let tags: string[] = [];
@@ -77,36 +80,19 @@ class Home extends View {
   
     <div class="container page">
       <div class="row">
-  
-        <div class="col-md-9">
-          <div class="feed-toggle">
-            <ul class="nav nav-pills outline-active">
-              <li class="nav-item">
-                <a class="nav-link disabled" href="">Your Feed</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link active" href="">Global Feed</a>
-              </li>
-            </ul>
-          </div>
-          ${posts.map(post => {
-            return `<div class="article-preview">
-              <div class="article-meta">
-                <a href="/profile"><img src="${post.author.image}"/></a>
-                <div class="info">
-                  <a href="/profile@${post.author.username}" class="author">${post.author.username}</a>
-                  <span class="date">${dateConverter(post.createdAt)}</span>
-                </div>
-                <button class="btn btn-outline-primary btn-sm pull-xs-right">
-                  <i class="ion-heart"></i> ${post.favoritesCount}
-                </button>
-              </div>
-              <a href="/article@${post.slug}" class="preview-link">
-                <h1>${post.title}</h1>
-                <p>${post.description}</p>
-                <span>Read more...</span>
-              </a>
-            </div>`}).join('')}
+      <div class="col-md-9">
+      <div class="feed-toggle">
+        <ul class="nav nav-pills outline-active">
+          <li class="nav-item">
+            <a class="nav-link" href="">Your Feed</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" href="">Global Feed</a>
+          </li>
+        </ul>
+      </div>
+        <div class="articles-container">
+          ${await getArticlesHtml(posts)}
             <div class="pagination-wraper">
               <ul class="pagination">
                 <li class="page-item"><a class="page-link move-first-page">&lt;&lt;</a></li>
@@ -122,6 +108,7 @@ class Home extends View {
                 <li class="page-item"><a class="page-link move-last-page">&gt;&gt;</a></li>
               </ul>
             </div>
+        </div>
         </div>
   
         <div class="col-md-3">
@@ -141,22 +128,23 @@ class Home extends View {
   }
 
   eventBinding(): void {
-    const $colMd9 = document.querySelector('.col-md-9') as HTMLDivElement;
     const $pagination = document.querySelector('.pagination') as HTMLUListElement;
     const $pageNumbers = document.querySelector('.page-numbers') as HTMLUListElement;
     const $moveFirstPage = document.querySelector('.move-first-page') as HTMLAnchorElement;
     const $movePrevPage = document.querySelector('.move-prev-page') as HTMLAnchorElement;
     const $moveNextPage = document.querySelector('.move-next-page') as HTMLAnchorElement;
     const $moveLastPage = document.querySelector('.move-last-page') as HTMLAnchorElement;
+    const $articleContainer = document.querySelector('.articles-container') as HTMLDivElement;
+    const $articleTab = document.querySelector('.nav-pills') as HTMLUListElement;
 
-    $colMd9.addEventListener('click', e => {
+    $articleContainer.addEventListener('click', (e: MouseEvent) => {
       const target = e.target as HTMLElement;
-      const parentNode = target.parentNode as HTMLAnchorElement;
-      if (target.matches('[href] > *')) {
-        e.preventDefault();
-        navigateTo(parentNode.href);
-      }
+
+      if (target.closest('.preview-link')) showArticle(e);
+      if (target.closest('.btn')) toggleFavoriteArticle(e);
     });
+
+    $articleTab.addEventListener('click', switchArticleSection);
 
     $pagination.addEventListener('click', async (e) => {
       const target = e.target as HTMLAnchorElement;
