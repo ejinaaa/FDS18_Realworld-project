@@ -137,11 +137,7 @@ const request = {
       comment: {
         body
       }
-    }, {
-      headers: {
-        Authorization: `Token ${userToken}`
-      }
-    });
+    }, { headers: { Authorization: `Token ${userToken}` } });
   },
 
   async deleteComment(slug: string, commentId: number) {

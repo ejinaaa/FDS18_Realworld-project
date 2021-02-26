@@ -198,7 +198,7 @@ class Article extends View {
                     <img src="${comment.author.image}" class="comment-author-img" />
                   </a>
                   &nbsp;
-                  <a href="/profile@${comment.author.username}" class="comment-author">J${comment.author.username}</a>
+                  <a href="/profile@${comment.author.username}" class="comment-author">${comment.author.username}</a>
                   <span class="date-posted">${dateConverter(comment.createdAt)}</span>
                   ${currentUserInfo.username === comment.author.username ? '<span class="mod-options"><i class="ion-trash-a"></i></span>' : ''}
                 </div>
