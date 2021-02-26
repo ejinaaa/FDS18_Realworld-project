@@ -10,7 +10,7 @@ import toggleFavoriteArticle from './toggleFavoriteArticle';
 class Profile extends View {
   constructor() {
     super();
-    this.setTitle('settings');
+    this.setTitle('Profile');
   }
 
   skeleton() {

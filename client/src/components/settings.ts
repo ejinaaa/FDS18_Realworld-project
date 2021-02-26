@@ -6,7 +6,7 @@ import settingsSkeleton from './settingsSkeleton';
 class Settings extends View {
   constructor() {
     super();
-    this.setTitle('settings');
+    this.setTitle('Settings');
   }
 
   skeleton(): string {

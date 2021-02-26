@@ -2,10 +2,10 @@ import View from '../utils/View';
 import request from '../api/request';
 import switchHeaderNav from './switchHeaderNav';
 
-class Login extends View {
+class Signin extends View {
   constructor() {
     super();
-    this.setTitle('login');
+    this.setTitle('Sign in');
   }
 
   skeleton(): string {
@@ -33,7 +33,7 @@ class Login extends View {
               <input class="form-control form-control-lg login-input-pw" type="password" placeholder="Password">
             </fieldset>
             <button class="btn btn-lg btn-primary pull-xs-right login-btn">
-              Sign up
+              Sign in
             </button>
           </form>
         </div>
@@ -81,4 +81,4 @@ class Login extends View {
   }
 }
 
-export default Login;
+export default Signin;
