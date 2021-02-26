@@ -18,4 +18,6 @@ Thumbs.db
 .vscode/
 
 #dist Files
+server/package-lock.json
+server/package.json
 server/dist/
