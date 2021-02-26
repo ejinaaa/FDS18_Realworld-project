@@ -32,7 +32,7 @@ const renderHeader = async () => {
         </a>
       </li>
       <li class="nav-item">
-        <a class="nav-link ${
+        <a class="nav-link nav-user ${
           currentPage === '/register' ? 'active' : currentPage === '/profile' ? 'active' : ''
         }" href="${userToken ? `/profile@${userName}` : '/register'}">${userToken ? userName : 'Sign up'}</a>
       </li>
