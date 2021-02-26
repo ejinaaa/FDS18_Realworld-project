@@ -1,6 +1,7 @@
 import View from '../utils/View';
 import navigateTo from '../utils/navigateTo';
 import request from '../api/request';
+import settingsSkeleton from './settingsSkeleton';
 
 class Settings extends View {
   constructor() {
@@ -9,7 +10,7 @@ class Settings extends View {
   }
 
   skeleton(): string {
-    return '';
+    return settingsSkeleton();
   }
 
   // eslint-disable-next-line class-methods-use-this
@@ -30,7 +31,7 @@ class Settings extends View {
                     <input class="form-control setting-input-img-url" type="text" placeholder="URL of profile picture" value="${userImgUrl ? userImgUrl : ''}">
                   </fieldset>
                   <fieldset class="form-group">
-                    <input class="form-control form-control-lg setting-input-name" type="text" placeholder="Your Name" value="${userName ? userName : ''}">
+                    <input class="form-control form-control-lg setting-input-name" type="text" placeholder="Your Name" value="${userName ? userName : ''}" disabled>
                   </fieldset>
                   <fieldset class="form-group">
                     <textarea class="form-control form-control-lg setting-input-bio" rows="8" placeholder="Short bio about you">${userBio ? userBio : ''}</textarea>
@@ -41,10 +42,10 @@ class Settings extends View {
                   <fieldset class="form-group">
                     <input class="form-control form-control-lg setting-input-pw" type="password" placeholder="Password">
                   </fieldset>
+                  </fieldset>
                   <button class="btn btn-lg btn-primary pull-xs-right setting-btn">
                     Update Settings
                   </button>
-              </fieldset>
             </form>
           </div>
     

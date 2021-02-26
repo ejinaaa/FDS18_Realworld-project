@@ -5,6 +5,7 @@ const getArticlesHtml = async (articlesInfo: Articles[]) => {
   return articlesInfo.map((articleInfo: Articles) => {
     const authorInfo = articleInfo.author;
     const tagList = articleInfo.tagList.map((tag: string) => `<li class="tag-default tag-pill tag-outline">${tag}</li>`).join('');
+    
     return `<div class="article-preview">
       <div class="article-meta">
         <a href="/profile@${authorInfo.username}"><img src="${authorInfo.image}" /></a>

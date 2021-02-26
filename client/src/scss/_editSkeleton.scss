@@ -1,0 +1,66 @@
+$skeletonColor: #f2f2f2;
+$skeletonHeight: 12px;
+$headingSkeletonColor: #5e5e5e;
+
+@keyframes loading {
+  0% {
+    transform: translateX(0);
+  }
+  50%,
+  100% {
+    transform: translateX(800px);
+  }
+}
+
+.edit-skeleton-container {
+  .form-group {
+    position: relative;
+
+    &.description-container, &.tag-container {
+      height: 38px;
+    }
+
+    &.textarea-container {
+      height: 178px;
+    }
+
+    .form-control {
+      position: absolute;
+    }
+
+    .edit-skeleton {
+      display: block;
+      width: 97%;
+      height: 18px;
+      background-color: $skeletonColor;
+      position: relative;
+      top: 10px;
+      left: 13px;
+      overflow: hidden;
+      margin-bottom: 8px;
+
+      &.short-skeleton {
+        width: 70%;
+      }
+    }
+
+    .edit-skeleton::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 30px;
+      height: 100%;
+      background: linear-gradient(to right, #f2f2f2, #ddd, #f2f2f2);
+      animation: loading 2s infinite linear;
+    }
+
+    &.title-container {
+      height: 51px;
+
+      .edit-skeleton {
+        top: 14px;
+      }
+    }
+  }
+}

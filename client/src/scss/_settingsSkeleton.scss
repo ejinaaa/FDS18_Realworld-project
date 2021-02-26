@@ -1,0 +1,62 @@
+$skeletonColor: #f2f2f2;
+$skeletonHeight: 12px;
+$headingSkeletonColor: #5e5e5e;
+
+@keyframes loading {
+  0% {
+    transform: translateX(0);
+  }
+  50%,
+  100% {
+    transform: translateX(540px);
+  }
+}
+
+.settings-skeleton-container {
+  .form-group {
+    position: relative;
+    height: 51px;
+    
+    &.img-url-container {
+      height: 38px;
+    }
+  
+    &.textarea-container {
+      height: 226px;
+    }
+  }
+
+  .form-control {
+    position: absolute;
+  }
+
+  .settings-skeleton {
+    display: block;
+    width: 513px;
+    height: 18px;
+    background-color: $skeletonColor;
+    position: relative;
+    top: 16px;
+    left: 13px;
+    overflow: hidden;
+  }
+
+  .skeleton-img-url {
+    top: 10px;
+  }
+
+  .skeleton-textarea {
+    margin-bottom: 8px;
+  }
+  
+  .settings-skeleton::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 30px;
+    height: 100%;
+    background: linear-gradient(to right, #f2f2f2, #ddd, #f2f2f2);
+    animation: loading 2s infinite linear;
+  }
+}
