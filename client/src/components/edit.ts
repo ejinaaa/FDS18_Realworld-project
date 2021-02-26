@@ -2,6 +2,7 @@ import View from '../utils/View';
 import navigateTo from '../utils/navigateTo';
 import request from '../api/request';
 import Article from '../interface/Articles';
+import editSkeleton from './editSkeleton';
 
 let isUpdate = false;
 let slug: string | undefined = '';
@@ -13,7 +14,7 @@ class Edit extends View {
   }
 
   skeleton(): string {
-    return '';
+    return editSkeleton();
   }
 
   async getHtml(): Promise<string> {
