@@ -4,6 +4,7 @@
   "description": "VanilaJavaScript codebase containing real world examples (CRUD, auth, advanced patterns, etc) that adheres to the [RealWorld](https://github.com/gothinkster/realworld) spec and API.",
   "main": "index.ts",
   "scripts": {
+    "start": "node server/server",
     "build": "webpack -w",
     "start:dev": "webpack serve",
     "lint": "eslint src/**/*.ts",
