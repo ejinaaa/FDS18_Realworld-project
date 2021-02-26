@@ -37,7 +37,7 @@ class Settings extends View {
                     <textarea class="form-control form-control-lg setting-input-bio" rows="8" placeholder="Short bio about you">${userBio ? userBio : ''}</textarea>
                   </fieldset>
                   <fieldset class="form-group">
-                    <input class="form-control form-control-lg setting-input-email" type="text" placeholder="Email" value="${userEmail ? userEmail : ''}">
+                    <input class="form-control form-control-lg setting-input-email" type="text" placeholder="Email" value="${userEmail ? userEmail : ''}" disabled>
                   </fieldset>
                   <fieldset class="form-group">
                     <input class="form-control form-control-lg setting-input-pw" type="password" placeholder="Password">
