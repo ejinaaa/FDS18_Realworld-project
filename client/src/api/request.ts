@@ -130,11 +130,16 @@ const request = {
       }
     });
   },
-
+  
   async createComment(slug: string, body: string) {
+    const userToken: string | null = localStorage.getItem('JWT');
     return await axios.post(`${API_URL}/articles/${slug}/comments`, {
       comment: {
         body
+      }
+    }, {
+      headers: {
+        Authorization: `Token ${userToken}`
       }
     });
   },
