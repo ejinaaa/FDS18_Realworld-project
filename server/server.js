@@ -8,6 +8,6 @@ app.get("/*", (req, res) => {
   res.sendFile(path.resolve(__dirname, 'dist', 'index.html'));
 });
 
-app.listen(9000, () => {
-  console.log("Server Running... on http://localhost:9000");
+app.listen(process.env.PORT || 9000, () => {
+  console.log("Server Running... on process.env.PORT || http://localhost:9000");
 });
