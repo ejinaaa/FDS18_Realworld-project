@@ -3,12 +3,12 @@
   "version": "1.0.0",
   "description": "VanilaJavaScript codebase containing real world examples (CRUD, auth, advanced patterns, etc) that adheres to the [RealWorld](https://github.com/gothinkster/realworld) spec and API.",
   "main": "index.ts",
+  "engines": {
+    "node": "14.15.5"
+  },
   "scripts": {
-    "start": "nodemon server/server",
     "build": "webpack -w",
-    "start:dev": "webpack serve",
-    "lint": "eslint src/**/*.ts",
-    "lint:fix": "eslint --fix src/**/*.ts"
+    "start": "node server/server.js"
   },
   "repository": {
     "type": "git",
@@ -23,7 +23,9 @@
   "homepage": "https://github.com/HaJunRyu/realworld-starter-kit#readme",
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^4.15.1",
-    "@typescript-eslint/parser": "^4.15.1",
+    "@typescript-eslint/parser": "^4.15.1"
+  },
+  "dependencies": {
     "css-loader": "^5.0.2",
     "eslint": "^7.20.0",
     "eslint-config-airbnb-base": "^14.2.1",
@@ -41,9 +43,7 @@
     "typescript": "^4.1.5",
     "webpack": "^5.24.1",
     "webpack-cli": "^4.5.0",
-    "webpack-dev-server": "^3.11.2"
-  },
-  "dependencies": {
+    "webpack-dev-server": "^3.11.2",
     "axios": "^0.21.1",
     "express": "^4.17.1",
     "lodash": "^4.17.21"
