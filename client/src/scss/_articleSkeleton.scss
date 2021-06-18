@@ -1,0 +1,110 @@
+$skeletonColor: #f2f2f2;
+$skeletonHeight: 12px;
+$headingSkeletonColor: #5e5e5e;
+
+@keyframes loading {
+  0% {
+    transform: translateX(0);
+  }
+  50%,
+  100% {
+    transform: translateX(910px);
+  }
+}
+
+.article-heading-skeleton {
+  width: 910px;
+  height: 40px;
+  background: #5e5e5e;
+  border-radius: 3px;
+}
+
+.author-img-skeleton {
+  display: inline-block;
+  background: $headingSkeletonColor;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+}
+
+.author-name-skeleton {
+  display: block;
+  width: 90px;
+  height: $skeletonHeight;
+  background: $headingSkeletonColor;
+  margin-bottom: 5px;
+}
+
+.create-at-skeleton {
+  display: inline-block;
+  width: 100px;
+  height: $skeletonHeight;
+  background: $headingSkeletonColor;
+}
+
+@for $index from 1 to 5 {
+  .article-body-skeleton#{$index} {
+    display: block;
+    width: 90% + 2 * $index;
+    height: 20px;
+    background: $skeletonColor;
+    margin-bottom: 7px;
+  }
+}
+
+@for $index from 5 to 10 {
+  .article-body-skeleton#{$index} {
+    display: block;
+    width: 110% - 2 * $index;
+    height: 20px;
+    background: $skeletonColor;
+    margin-bottom: 7px;
+  }
+}
+
+.skeleton-comment-meta {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.comment-author-img-skeleton {
+  display: inline-block;
+  background: $skeletonColor;
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+}
+
+.comment-author-name-skeleton {
+  display: block;
+  width: 90px;
+  height: $skeletonHeight;
+  background: $skeletonColor;
+  margin-bottom: 5px;
+}
+
+.comment-create-at-skeleton {
+  display: block;
+  width: 100px;
+  height: $skeletonHeight;
+  background: $skeletonColor;
+}
+
+.heading-skeleton {
+  position: relative;
+  overflow: hidden;
+}
+
+.heading-skeleton::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 30px;
+  height: 100%;
+  background: linear-gradient(to right, #5e5e5e, #828282, #5e5e5e);
+  animation: loading 2s infinite linear;
+}

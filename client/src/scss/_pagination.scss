@@ -1,0 +1,49 @@
+.pagination-wraper {
+  display: flex;
+  justify-content: center;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.pagination {
+  display: flex;
+}
+
+.move-prev-page {
+  border-right: 0;
+}
+
+.move-next-page {
+  border-left: 0;
+}
+
+.page-slides {
+  padding-left: 0;
+  width: 197px;
+  overflow: hidden;
+  list-style: none;
+}
+
+.page-numbers {
+  $index: 1;
+  padding-left: 0;
+  display: flex;
+  flex-flow: row nowrap;
+  transform: translateX();
+  transition: transform 300ms ease-out;
+  transform: translateX(0);
+}
+
+.page-numbers .page-item .page-number {
+  border-radius: 0;
+  min-width: 40px !important;
+  max-width: 40px;
+  text-align: center;
+}
+
+.page-numbers .page-item:last-child {
+  border-right: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.page-link {
+  cursor: pointer;
+}
